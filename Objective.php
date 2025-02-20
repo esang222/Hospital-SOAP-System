@@ -38,6 +38,8 @@ $adminName = 'Admin01';
             height: 100%;
             box-sizing: border-box;
             text-wrap: nowrap;
+            display: flex;
+            flex-direction: column; 
         }
 
         .profile {
@@ -64,11 +66,15 @@ $adminName = 'Admin01';
         aside ul {
             list-style: none;
             padding: 0;
+            flex-grow: 1; 
         }
 
-        aside ul li a:hover {
-            color: #ccc;
+        aside ul li:hover {
+            border: 1px;
+            border-radius: 10px;
+            background-color: #668C9CFF;
         }
+
 
         aside ul li {
             padding: 25px 10px;
@@ -90,14 +96,6 @@ $adminName = 'Admin01';
             padding: 20px 50px;
             box-sizing: border-box;
             overflow-y: auto;
-        }
-        
-        .title h1 {
-            margin-top: 30px;
-            font-size: 35px;
-            font-weight: 600;
-            margin-left: 30px;
-            color: #176B87;
         }
 
         header {
@@ -267,16 +265,20 @@ $adminName = 'Admin01';
         </div>
         <aside>
             <ul>
+                <li><i class="fa-solid fa-house"></i></i>
+                <a href="dashboard.php">Dashboard</a></li>
                 <li><i class="fa-solid fa-hospital-user" style="color: #ffffff;"></i>
-                <a href="#">Patient Management</a></li>
+                <a href="patients.php">Patient Management</a></li>
                 <li><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i>
-                <a href="#">Appointments</a></li>
+                <a href="appointment.php">Appointments</a></li>
                 <li><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i>
-                <a href="#">SOAP Notes</a></li>
+                <a href="Subjective.php">SOAP Notes</a></li>
+                <li><i class="fa-solid fa-laptop-medical"></i>
+                <a href="records.php">Records</a></li>
                 <li><i class="fa-solid fa-gear" style="color: #ffffff;"></i>
                 <a href="#">Settings</a></li>
                 <li><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
-                <a href="#">Logout</a></li>
+                <a href="login.php">Logout</a></li>
             </ul>
         </aside>
     </div>
