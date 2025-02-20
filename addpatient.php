@@ -266,7 +266,9 @@ $adminName = 'Admin01';
                         <input type="tel" id="contact" name="contact">
                     </div>
                     <div class="buttons">
+                        <a href="patients.php"><button id="cancel">Cancel</button></a>
                         <button id="save">Save</button>
+
                     </div>
                 </div>
             </div>
