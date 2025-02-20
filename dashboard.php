@@ -240,8 +240,14 @@ $upcomingAppointments = [
             cursor: pointer;
             font-size: 18px;
             margin-left: 100px;
-            width: 17%;
+            width: 80%;
             justify-content: center;
+            text-decoration: none;        
+
+        }
+
+        .action-buttons a {
+            text-decoration: none;        
         }
 
         .action-buttons button:hover {
@@ -321,9 +327,9 @@ $upcomingAppointments = [
     <div class="quick-actions">
         <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
         <div class="action-buttons">
-            <button><i class="fa-solid fa-user-plus"></i> Add New Patient</button>
-            <button><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i> Schedule Appointment</button>
-            <button><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i> New SOAP Note</button>
+            <a href="addpatient.php"><button><i class="fa-solid fa-user-plus"></i> Add New Patient</button></a>
+            <a href="appointment.php"><button><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i> Schedule Appointment</button></a>
+            <a href="Subjective.php"><button><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i> Create SOAP Note</button></a>
         </div>
     </div>
     </section>
