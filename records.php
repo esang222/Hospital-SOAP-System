@@ -44,6 +44,10 @@ $adminName = 'Admin01';
             color: white;
             padding: 15px;
             height: 100%;
+            box-sizing: border-box;
+            text-wrap: nowrap;
+            display: flex;
+            flex-direction: column; 
         }
 
         .profile {
@@ -59,6 +63,7 @@ $adminName = 'Admin01';
             height: 100px;
             background-color: white;
             border-radius: 50%;
+            margin-right: 10px;
         }
 
         .profile-name {
@@ -69,7 +74,15 @@ $adminName = 'Admin01';
         aside ul {
             list-style: none;
             padding: 0;
+            flex-grow: 1; 
         }
+
+        aside ul li:hover {
+            border: 1px;
+            border-radius: 10px;
+            background-color: #668C9CFF;
+        }
+
 
         aside ul li {
             padding: 25px 10px;
@@ -89,6 +102,7 @@ $adminName = 'Admin01';
         .main-content {
             flex-grow: 1;
             padding: 20px 50px;
+            box-sizing: border-box;
             overflow-y: auto;
         }
 
@@ -100,7 +114,6 @@ $adminName = 'Admin01';
             padding: 20px;
             color: white;
             border-radius: 20px;
-            margin-bottom: 30px;
         }
 
         header h1 {
@@ -156,19 +169,28 @@ $adminName = 'Admin01';
         <div class="profile-name"><?php echo htmlspecialchars($adminName); ?></div>
     </div>
     <aside>
-        <ul>
-            <li><i class="fa-solid fa-hospital-user"></i> <a href="#">Patient Management</a></li>
-            <li><i class="fa-solid fa-calendar-check"></i> <a href="#">Appointments</a></li>
-            <li><i class="fa-solid fa-notes-medical"></i> <a href="#">SOAP Notes</a></li>
-            <li><i class="fa-solid fa-gear"></i> <a href="#">Settings</a></li>
-            <li><i class="fa-solid fa-right-from-bracket"></i> <a href="#">Logout</a></li>
-        </ul>
-    </aside>
+            <ul>
+                <li><i class="fa-solid fa-house"></i></i>
+                <a href="dashboard.php">Dashboard</a></li>
+                <li><i class="fa-solid fa-hospital-user" style="color: #ffffff;"></i>
+                <a href="patients.php">Patient Management</a></li>
+                <li><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i>
+                <a href="appointment.php">Appointments</a></li>
+                <li><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i>
+                <a href="Subjective.php">SOAP Notes</a></li>
+                <li><i class="fa-solid fa-laptop-medical"></i>
+                <a href="records.php">Records</a></li>
+                <li><i class="fa-solid fa-gear" style="color: #ffffff;"></i>
+                <a href="#">Settings</a></li>
+                <li><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
+                <a href="login.php">Logout</a></li>
+            </ul>
+        </aside>
 </div>
 
 <div class="main-content">
     <header>
-        <h1>SOAP Notes History</h1>
+        <h1>SOAP Notes Records</h1>
     </header>
 
     <div class="table-container">
