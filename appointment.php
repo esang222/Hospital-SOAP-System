@@ -3,33 +3,31 @@ $profileImage = 'img/hehe.jpg.';
 $adminName = 'Admin01';
 
 ?>
-
+      
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Appointment Management</title>
-    <style> 
-    @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+    <title>Patient Management</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
-* {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: "Lexend", serif;
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: "Lexend", serif; 
+        }
+        html, body { 
+            height: 100%; 
+        }
+        body { 
+            display: flex; 
         }
 
-        html, body {
-            height: 100%;
-        }
-
-        body {
-            display: flex;
-        }
-
-    .sidebar {
+        .sidebar {
             width: 320px;
             background-color: #176B87;
             color: white;
@@ -37,6 +35,8 @@ $adminName = 'Admin01';
             height: 100%;
             box-sizing: border-box;
             text-wrap: nowrap;
+            display: flex;
+            flex-direction: column; 
         }
 
         .profile {
@@ -47,7 +47,7 @@ $adminName = 'Admin01';
             flex-direction: column;
         }
 
-        .profile-icon img{
+        .profile-icon img {
             width: 100px;
             height: 100px;
             background-color: white;
@@ -63,10 +63,11 @@ $adminName = 'Admin01';
         aside ul {
             list-style: none;
             padding: 0;
+            flex-grow: 1; 
         }
 
-        aside ul li:hover{
-            border-bottom: 1px solid white;
+        aside ul li a:hover {
+            color: #ccc;
         }
 
         aside ul li {
@@ -79,7 +80,6 @@ $adminName = 'Admin01';
             font-size: 22px;
             padding: 10px;
         }
-
 
         aside ul li i {
             font-size: 26px;
@@ -148,65 +148,68 @@ $adminName = 'Admin01';
         }
 
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        background-color: white;
-        margin-top: 20px;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            margin-top: 20px;
+        }
 
-    th, td {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: left;
-    }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
 
-    th {
-        background-color: #1f677a;
-        color: white;
-    }
+        th {
+            background-color: #1f677a;
+            color: white;
+        }
 
-    .btn {
-        display: inline-block;
-        padding: 8px 12px;
-        text-decoration: none;
-        border: none;
-        color: white;
-        cursor: pointer;
-        border-radius: 5px;
-    }
+        .btn {
+            display: inline-block;
+            padding: 8px 12px;
+            text-decoration: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
 
-    .btn-primary { background-color: #1f677a; }
-    .btn-success { background-color: #28a745; }
-    .btn-warning { background-color: #ffc107; color: black; }
-    .btn-danger { background-color: #dc3545; }
+        .btn-primary { background-color: #1f677a; }
+        .btn-success { background-color: #28a745; }
+        .btn-warning { background-color: #ffc107; color: black; }
+        .btn-danger { background-color: #dc3545; }
 
 
-    .text-success { color: green; }
-    .text-danger { color: red; }
+        .text-success { color: green; }
+        .text-danger { color: red; }
 
     </style>
 </head>
-<body>
-<div class="sidebar">
+    <div class="sidebar">
         <div class="profile">
             <div class="profile-icon">
-                <img src="<?php echo $profileImage; ?>" alt="Profile Image">
+                <img src="<?php echo htmlspecialchars($profileImage); ?>" alt="Profile Image">
             </div>
-            <div class="profile-name"><?php echo $adminName; ?></div>
+            <div class="profile-name"><?php echo htmlspecialchars($adminName); ?></div>
         </div>
         <aside>
             <ul>
+                <li><i class="fa-solid fa-house"></i></i>
+                <a href="dashboard.php">Dashboard</a></li>
                 <li><i class="fa-solid fa-hospital-user" style="color: #ffffff;"></i>
-                <a href="#">Patient Management</a></li>
+                <a href="patients.php">Patient Management</a></li>
                 <li><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i>
-                <a href="#">Appointments</a></li>
+                <a href="appointment.php">Appointments</a></li>
                 <li><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i>
-                <a href="#">SOAP Notes</a></li>
+                <a href="Subjective.php">SOAP Notes</a></li>
+                <li><i class="fa-solid fa-laptop-medical"></i>
+                <a href="records.php">Records</a></li>
                 <li><i class="fa-solid fa-gear" style="color: #ffffff;"></i>
                 <a href="#">Settings</a></li>
                 <li><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
-                <a href="#">Logout</a></li>
+                <a href="login.php">Logout</a></li>
             </ul>
         </aside>
     </div>
