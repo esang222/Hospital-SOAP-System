@@ -265,11 +265,12 @@ $adminName = 'Admin01';
                         <label for="contact">Contact Number:</label>
                         <input type="tel" id="contact" name="contact">
                     </div>
+
                     <div class="buttons">
                         <a href="patients.php"><button id="cancel">Cancel</button></a>
                         <button id="save">Save</button>
-
                     </div>
+                    
                 </div>
             </div>
         </section>
