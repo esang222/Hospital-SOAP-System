@@ -37,8 +37,13 @@
         }
 
         h1 {
-            margin-bottom: 50px;
+            margin-bottom: 30px;
             font-size: 42px;
+        }
+
+        h2 {
+            margin-bottom: 50px;
+            font-size: 32px;
         }
 
         .input-group {
@@ -69,16 +74,16 @@
         }
 
         .login-button {
-            background: #a5c6dc;
+            background: #9FCCEBFF;
             border: none;
             padding: 12px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
-            width: 50%;
+            font-size: 20px;
+            width: 30%;
             margin-top: 10px;
             color: black;
-            font-weight: bold;
+            font-weight: 500;
         }
 
         .login-button:hover {
@@ -89,8 +94,9 @@
 <body>
     
     <div class="login-container">
-        <h1>LOGIN</h1>
-        <h1>Welcome, Admin</h1>
+        <h1>Welcome, Admin</h1>        
+        <h2>Login to Pulse+</h2>
+
         <form method="POST" action="">
             <div class="input-group">
                 <label for="username">Username</label>
