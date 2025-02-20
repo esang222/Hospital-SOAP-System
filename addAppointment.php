@@ -260,12 +260,11 @@ $adminName = 'Admin01';
                         <select id="specialty" name="specialty">
                             <option value="" selected disabled>Select a Specialty</option>
                         </select>
-
-                    </div>
+                </div>
                     <div class="buttons">
+                        <a href="appointment.php"><button id="cancel">Cancel</button></a>
                         <button id="save">Save</button>
                     </div>
-                </div>
             </div>
         </section>
     </div>
