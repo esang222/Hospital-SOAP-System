@@ -1,5 +1,5 @@
 <?php
-$profileImage = "img/hehe.jpg"; 
+$profileImage = ""; 
 $adminName = "Admin01";
 $totalPatients = "";
 $todaysAppointments = "";
@@ -48,17 +48,17 @@ $upcomingAppointments = [
         .profile {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
             justify-content: center;
             flex-direction: column;
+            margin-bottom: 20px;
         }
 
-        .profile-icon img {
+        .profile-icon {
             width: 100px;
             height: 100px;
             background-color: white;
             border-radius: 50%;
-            margin-right: 10px;
+            object-fit: cover;
         }
 
         .profile-name {
@@ -74,12 +74,6 @@ $upcomingAppointments = [
         aside ul li {
             /* margin: 15px 0; */
             padding: 25px 10px;
-        }
-
-        aside ul li:hover {
-            border: 1px;
-            border-radius: 10px;
-            background-color: #668C9CFF;
         }
 
         aside ul li a {
@@ -114,13 +108,6 @@ $upcomingAppointments = [
             font-weight: 600;
         }
 
-        section{
-            background-color: #C0D7E2FF; 
-            padding: 40px 30px;
-            height: 80%;
-            border-radius: 15px;
-        }
-
         .quick-stats {
             margin: 20px 0;
             font-size: 25px;
@@ -136,7 +123,7 @@ $upcomingAppointments = [
         }
 
         .stats-container {
-            background-color: white;
+            background-color: #DBECF7;
             padding: 15px;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -181,12 +168,12 @@ $upcomingAppointments = [
         }
 
         .appointments-table th {
-            background-color: #93B2C0FF;
+            background-color: #DBECF7;
             font-weight: bold;
         }
 
-        .appointments-table tbody tr {
-            background-color: #FFFFFFFF;
+        .appointments-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
 
         .view-link {
@@ -223,9 +210,8 @@ $upcomingAppointments = [
         .action-buttons {
             display: flex;
             gap: 50px;
-            margin-top: 30px;
+            margin-top: 10px;
             align-items: center;
-            justify-content: center;
         }
 
         .action-buttons button {
@@ -240,46 +226,34 @@ $upcomingAppointments = [
             cursor: pointer;
             font-size: 18px;
             margin-left: 100px;
-            width: 80%;
+            width: 18%;
             justify-content: center;
-            text-decoration: none;        
-
-        }
-
-        .action-buttons a {
-            text-decoration: none;        
         }
 
         .action-buttons button:hover {
-            background-color: #244958FF;
+            background-color: #268ab2;
         }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
-        <div class="profile">
-            <div class="profile-icon">
-                <img src="<?php echo htmlspecialchars($profileImage); ?>" alt="Profile Image">
-            </div>
-            <div class="profile-name"><?php echo htmlspecialchars($adminName); ?></div>
-        </div>    
-        <aside>
+    <div class="profile">
+        <img src="<?php echo $profileImage; ?>" alt="Profile" class="profile-icon">
+        <div class="profile-name"><?php echo $adminName; ?></div>
+    </div>
+    <aside>
             <ul>
-                <li><i class="fa-solid fa-house"></i></i>
-                <a href="dashboard.php">Dashboard</a></li>
                 <li><i class="fa-solid fa-hospital-user" style="color: #ffffff;"></i>
-                <a href="patients.php">Patient Management</a></li>
+                <a href="#">Patient Management</a></li>
                 <li><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i>
-                <a href="appointment.php">Appointments</a></li>
+                <a href="#">Appointments</a></li>
                 <li><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i>
-                <a href="Subjective.php">SOAP Notes</a></li>
-                <li><i class="fa-solid fa-laptop-medical"></i>
-                <a href="records.php">Records</a></li>
+                <a href="#">SOAP Notes</a></li>
                 <li><i class="fa-solid fa-gear" style="color: #ffffff;"></i>
                 <a href="#">Settings</a></li>
                 <li><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
-                <a href="login.php">Logout</a></li>
+                <a href="#">Logout</a></li>
             </ul>
         </aside>
 </div>
@@ -289,7 +263,6 @@ $upcomingAppointments = [
         <h1>Dashboard</h1>
     </header>
 
-    <section>
     <div class="quick-stats">
         <i class="fas fa-chart-bar"></i> Quick Stats
     </div>
@@ -327,14 +300,11 @@ $upcomingAppointments = [
     <div class="quick-actions">
         <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
         <div class="action-buttons">
-            <a href="addpatient.php"><button><i class="fa-solid fa-user-plus"></i> Add New Patient</button></a>
-            <a href="appointment.php"><button><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i> Schedule Appointment</button></a>
-            <a href="Subjective.php"><button><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i> Create SOAP Note</button></a>
+            <button><i class="fa-solid fa-user-plus"></i> Add New Patient</button>
+            <button><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i> Schedule Appointment</button>
+            <button><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i> New SOAP Note</button>
         </div>
     </div>
-    </section>
-
-    
 </div>
 
 </body>
