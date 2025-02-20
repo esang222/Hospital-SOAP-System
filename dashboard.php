@@ -278,8 +278,7 @@ $upcomingAppointments = [
                 <a href="records.php">Records</a></li>
                 <li><i class="fa-solid fa-gear" style="color: #ffffff;"></i>
                 <a href="#">Settings</a></li>
-                <li><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
-                <a href="login.php">Logout</a></li>
+
             </ul>
         </aside>
 </div>
