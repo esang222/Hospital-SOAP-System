@@ -65,9 +65,12 @@ $adminName = 'Admin01';
             padding: 0;
         }
 
-        aside ul li a:hover{
-            color: #ccc;
+        aside ul li:hover {
+            border: 1px;
+            border-radius: 10px;
+            background-color: #668C9CFF;
         }
+
 
         aside ul li {
             padding: 25px 10px;
