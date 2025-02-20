@@ -288,7 +288,7 @@ $adminName = 'Admin01';
             <div class="search-bar">
                 <input type="text" placeholder="Search">
                 <button><i class="fa-solid fa-magnifying-glass"></i>Search</button>
-                <a href="addpatient.php"><button> <i class="fa-solid fa-user-plus"></i>Add Patient</button></a>
+                <a href="addpatient.php"><button> <i class="fa-solid fa-calendar-check"></i>Add Appointment</button></a>
             </div>
         </nav>
 
