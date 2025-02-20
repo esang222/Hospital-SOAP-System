@@ -243,18 +243,23 @@ $upcomingAppointments = [
                 <img src="<?php echo htmlspecialchars($profileImage); ?>" alt="Profile Image">
             </div>
             <div class="profile-name"><?php echo htmlspecialchars($adminName); ?></div>
-        </div>    <aside>
+        </div>    
+        <aside>
             <ul>
+                <li><i class="fa-solid fa-house"></i></i>
+                <a href="dashboard.php">Dashboard</a></li>
                 <li><i class="fa-solid fa-hospital-user" style="color: #ffffff;"></i>
-                <a href="#">Patient Management</a></li>
+                <a href="patients.php">Patient Management</a></li>
                 <li><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i>
-                <a href="#">Appointments</a></li>
+                <a href="appointment.php">Appointments</a></li>
                 <li><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i>
-                <a href="#">SOAP Notes</a></li>
+                <a href="Subjective.php">SOAP Notes</a></li>
+                <li><i class="fa-solid fa-laptop-medical"></i>
+                <a href="records.php">Records</a></li>
                 <li><i class="fa-solid fa-gear" style="color: #ffffff;"></i>
                 <a href="#">Settings</a></li>
                 <li><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
-                <a href="#">Logout</a></li>
+                <a href="login.php">Logout</a></li>
             </ul>
         </aside>
 </div>
