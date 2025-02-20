@@ -142,7 +142,7 @@ $adminName = 'Admin01';
             border: none;
             cursor: pointer;
             border-radius: 10px;
-            font-size: 14px;
+            font-size: 16px;
             box-shadow: 3px 2px 5px rgba(0, 0, 0, 0.4);
         }
 
@@ -154,19 +154,19 @@ $adminName = 'Admin01';
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: white;
+            background-color: gray;
             margin-top: 20px;
         }
 
         th, td {
-            border: 1px solid #ddd;
+            border: 1px solid gray;
             padding: 10px;
-            text-align: left;
+            text-align: center;
         }
 
         th {
-            background-color: #1f677a;
-            color: white;
+            background-color: #B2DBED;
+            color: black;
         }
 
         .btn {
@@ -224,7 +224,7 @@ $adminName = 'Admin01';
             <div class="search-bar">
                 <input type="text" placeholder="Search">
                 <button><i class="fa-solid fa-magnifying-glass"></i>Search</button>
-                <a href="addpatient.php"><button> <i class="fa-solid fa-calendar-check"></i>Add Appointment</button></a>
+                <a href="addAppointment.php"><button> <i class="fa-solid fa-calendar-check"></i>Add Appointment</button></a>
             </div>
         </nav>
 
@@ -238,6 +238,7 @@ $adminName = 'Admin01';
                     <th>Doctor's Name</th>
                     <th>Specialty</th>
                     <th>Appointment Date & Time</th>
+                    <th>Reason of Appointment</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
