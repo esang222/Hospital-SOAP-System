@@ -85,9 +85,13 @@ $conn->close();
             flex-grow: 1; 
         }
 
-        aside ul li a:hover {
-            color: #ccc;
+
+        aside ul li:hover {
+            border: 1px;
+            border-radius: 10px;
+            background-color: #668C9CFF;
         }
+
 
         aside ul li {
             padding: 25px 10px;
@@ -183,20 +187,37 @@ $conn->close();
         }
         .patient-list td .edit, .patient-list td .delete, .patient-list td .add-appointment {
             padding: 10px; 
-            color: white; 
-            border: none; 
+            color: black; 
+            border: 1px solid gray; 
             cursor: pointer; 
             margin-right: 10px; 
             border-radius: 10px;
         }
-        .patient-list td .edit { background-color: #CDC113; }
-        .patient-list td .edit:hover { background-color: #A79F30FF; }
-        .patient-list td .delete { background-color: #C90F12; }
-        .patient-list td .delete:hover { background-color: #852426FF; }
-        .patient-list td .add-appointment { background-color: #17871B; }
-        .patient-list td .add-appointment:hover { background-color: #126D15FF; }
-        .pagination { margin-top: 30px; text-align: center; }
-        .pagination i { padding: 0px 20px; }
+        .patient-list td .edit {
+             background-color: #B9B048FF; 
+        }
+        .patient-list td .edit:hover { 
+            background-color: #A79F30FF;
+         }
+        .patient-list td .delete { 
+            background-color: #BB5557FF;
+         }
+        .patient-list td .delete:hover { 
+            background-color: #852426FF;
+         }
+        .patient-list td .add-appointment { 
+            background-color: #4CAC4FFF;
+         }
+        .patient-list td .add-appointment:hover { 
+            background-color: #126D15FF;
+         }
+        .pagination { 
+            margin-top: 30px; 
+            text-align: center;
+         }
+        .pagination i { 
+            padding: 0px 20px;
+         }
     </style>
 </head>
 <body>
