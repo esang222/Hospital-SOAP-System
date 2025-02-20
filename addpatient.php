@@ -41,8 +41,8 @@ $adminName = 'Admin01';
 
         .profile {
             display: flex;
-            align-items: center;
             margin-bottom: 20px;
+            align-items: center;
             justify-content: center;
             flex-direction: column;
         }
