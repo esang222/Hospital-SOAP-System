@@ -76,6 +76,12 @@ $upcomingAppointments = [
             padding: 25px 10px;
         }
 
+        aside ul li:hover {
+            border: 1px;
+            border-radius: 10px;
+            background-color: #668C9CFF;
+        }
+
         aside ul li a {
             color: white;
             text-decoration: none;
@@ -108,6 +114,13 @@ $upcomingAppointments = [
             font-weight: 600;
         }
 
+        section{
+            background-color: #C0D7E2FF; 
+            padding: 40px 30px;
+            height: 80%;
+            border-radius: 15px;
+        }
+
         .quick-stats {
             margin: 20px 0;
             font-size: 25px;
@@ -123,7 +136,7 @@ $upcomingAppointments = [
         }
 
         .stats-container {
-            background-color: #DBECF7;
+            background-color: white;
             padding: 15px;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -168,12 +181,12 @@ $upcomingAppointments = [
         }
 
         .appointments-table th {
-            background-color: #DBECF7;
+            background-color: #93B2C0FF;
             font-weight: bold;
         }
 
-        .appointments-table tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .appointments-table tbody tr {
+            background-color: #FFFFFFFF;
         }
 
         .view-link {
@@ -210,8 +223,9 @@ $upcomingAppointments = [
         .action-buttons {
             display: flex;
             gap: 50px;
-            margin-top: 10px;
+            margin-top: 30px;
             align-items: center;
+            justify-content: center;
         }
 
         .action-buttons button {
@@ -226,12 +240,12 @@ $upcomingAppointments = [
             cursor: pointer;
             font-size: 18px;
             margin-left: 100px;
-            width: 18%;
+            width: 17%;
             justify-content: center;
         }
 
         .action-buttons button:hover {
-            background-color: #268ab2;
+            background-color: #244958FF;
         }
     </style>
 </head>
@@ -269,6 +283,7 @@ $upcomingAppointments = [
         <h1>Dashboard</h1>
     </header>
 
+    <section>
     <div class="quick-stats">
         <i class="fas fa-chart-bar"></i> Quick Stats
     </div>
@@ -311,6 +326,9 @@ $upcomingAppointments = [
             <button><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i> New SOAP Note</button>
         </div>
     </div>
+    </section>
+
+    
 </div>
 
 </body>
