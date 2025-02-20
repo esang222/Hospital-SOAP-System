@@ -2,33 +2,6 @@
 $profileImage = 'img/hehe.jpg.';
 $adminName = 'Admin01';
 
-// $host = "localhost";
-// $user = "root"; 
-// $password = "";
-// $database = "dbappointmentmanagement";
-
-// $conn = new mysqli($host, $user, $password, $database);
-
-
-// if ($conn->connect_error) {
-//     die("Connection failed: " . $conn->connect_error);
-// }
-
-
-// $sql = "SELECT a.id, a.patient_name, a.contact_number, a.appointment_date, a.appointment_time, a.status, 
-//                COALESCE(d.name, 'N/A') AS doctor_name, COALESCE(s.name, 'N/A') AS specialty
-//         FROM appointments a
-//         LEFT JOIN doctors d ON a.doctor_id = d.id
-//         LEFT JOIN specialties s ON a.specialty_id = s.id
-//         ORDER BY a.appointment_date, a.appointment_time";
-
-// $result = $conn->query($sql);
-
-// if (!$result) {
-//     die("Query failed: " . $conn->error);
-// }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -212,49 +185,6 @@ $adminName = 'Admin01';
     .text-success { color: green; }
     .text-danger { color: red; }
 
-    /* .search-container {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
-
-    .search-input {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 20px;
-        width: 250px;
-    }
-
-    .search-btn {
-        background-color: #1f677a;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 20px;
-        cursor: pointer;
-    }
-
-    .search-btn:hover {
-        background-color: #145060;
-    } */
-
-    /* .add-btn {
-        background-color: #1f677a;
-        color: white;
-        padding: 10px 15px;
-        border-radius: 20px;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-
-    }
-
-    .add-btn:hover {
-        background-color: #145060;
-    } */
     </style>
 </head>
 <body>
