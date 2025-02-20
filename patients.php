@@ -187,7 +187,7 @@ $conn->close();
         }
         .patient-list td .edit, .patient-list td .delete, .patient-list td .add-appointment {
             padding: 10px; 
-            color: black; 
+            color: white; 
             border: 1px solid gray; 
             cursor: pointer; 
             margin-right: 10px; 
