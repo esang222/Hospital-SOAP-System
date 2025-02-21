@@ -1,7 +1,26 @@
 <?php
 $profileImage = 'img/hehe.jpg.';
 $adminName = 'Admin01';
+include 'config.php';
 
+
+// Establish database connection if not already set
+if (!isset($conn)) {
+    $conn = new mysqli("127.0.0.1", "root", "", "hospital_soap_system");
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+}
+
+$sql = "SELECT a.id, p.full_name AS patient_name, p.contact, 
+               u.username AS doctor_name, a.appointment_date, a.status, a.notes
+        FROM appointments a
+        JOIN patients p ON a.patient_id = p.id
+        JOIN users u ON a.doctor_id = u.id
+        WHERE u.role = 'Doctor'
+        ORDER BY a.appointment_date DESC";
+
+$result = $conn->query($sql);
 ?>
       
 <!DOCTYPE html>
@@ -154,7 +173,6 @@ $adminName = 'Admin01';
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: gray;
             margin-top: 20px;
         }
 
@@ -243,25 +261,26 @@ $adminName = 'Admin01';
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- <?php while($row = $result->fetch_assoc()): ?> -->
-                <tr>
-                    <td><?php echo htmlspecialchars($row['id']); ?></td>
-                    <td><?php echo htmlspecialchars($row['patient_name']); ?></td>
-                    <td><?php echo htmlspecialchars($row['contact_number']); ?></td>
-                    <td><?php echo htmlspecialchars($row['doctor_name']); ?></td>
-                    <td><?php echo htmlspecialchars($row['specialty']); ?></td>
-                    <td><?php echo htmlspecialchars($row['appointment_date'] . ' ' . $row['appointment_time']); ?></td>
-                    <td class="<?php echo ($row['status'] == 'CONFIRMED') ? 'text-success' : 'text-danger'; ?>">
-                        <?php echo htmlspecialchars($row['status']); ?>
-                    </td>
-                    <td>
-                        <a href="edit_appointment.php?id=<?php echo urlencode($row['id']); ?>" class="btn btn-warning">Edit</a>
-                        <a href="delete_appointment.php?id=<?php echo urlencode($row['id']); ?>" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
-                <?php endwhile; ?>
-            </tbody>
+                    <tbody>
+            <?php while ($row = $result->fetch_assoc()): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($row['id']); ?></td>
+                <td><?php echo htmlspecialchars($row['patient_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['contact']); ?></td>
+                <td><?php echo htmlspecialchars($row['doctor_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['appointment_date']); ?></td>
+                <td><?php echo htmlspecialchars($row['notes']); ?></td>
+                <td class="<?php echo ($row['status'] == 'Scheduled') ? 'text-success' : 'text-danger'; ?>">
+                    <?php echo htmlspecialchars($row['status']); ?>
+                </td>
+                <td>
+                    <a href="edit_appointment.php?id=<?php echo urlencode($row['id']); ?>" class="btn btn-warning">Edit</a>
+                    <a href="delete_appointment.php?id=<?php echo urlencode($row['id']); ?>" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            <?php endwhile; ?>
+        </tbody>
+
         </table>
     </div>
 </body>
