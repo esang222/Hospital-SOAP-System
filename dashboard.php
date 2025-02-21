@@ -317,7 +317,7 @@ $upcomingAppointments = [
                     <td><?php echo $appointment['patientName']; ?></td>
                     <td><?php echo $appointment['doctor']; ?></td>
                     <td><?php echo $appointment['status']; ?></td>
-                    <td><a href="#" class="view-link">View</a></td>
+                    <td><a href="appointment.php" class="view-link">View</a></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
