@@ -199,8 +199,10 @@ $adminName = 'Admin01';
                 <tr>
                     <th>Patient Name</th>
                     <th>Date</th>
-                    <th>Diagnosis</th>
-                    <th>Action</th>
+                    <th>Subjective</th>
+                    <th>Objective</th>
+                    <th>Assessment</th>
+                    <th>Plan</th>
                 </tr>
             </thead>
             <tbody>
@@ -210,13 +212,16 @@ $adminName = 'Admin01';
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($row["patient_name"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["date"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["diagnosis"]) . "</td>";
-                        echo "<td><a href='view_soap.php?id=" . $row["id"] . "' class='view-btn'>View</a></td>";
+                        echo "<td>" . htmlspecialchars($row["subjective"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["objective"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["assessment"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["plan"]) . "</td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='4'>No SOAP notes found.</td></tr>";
+                    echo "<tr><td colspan='7'>No SOAP notes found.</td></tr>";
                 }
+                
                 ?>
             </tbody>
         </table>
