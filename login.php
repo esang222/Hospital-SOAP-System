@@ -49,109 +49,106 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Login</title>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
         * {
-            font-family: 'Lexend';
+            font-family: 'Lexend', sans-serif;
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             display: flex;
-            justify-content: flex-start;
-            align-items: center;
             height: 100vh;
-            background: url('img/medical.') no-repeat center center fixed;
-            background-size: cover;
-            margin: 0;
-        }
-
-        .login-container{
-            background-color: #fff;
-            margin-left: 30rem;
-            padding: 60px;
-            border: 1px solid gray;
-            border-radius: 15px;
-            opacity: 90%;
-
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #3b8d99, #6b9fb8);
         }
 
         .container {
-            background: rgba(31, 91, 110, 0.8);
-            padding: 50px;
-            border-radius: 15px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            width: 600px;
+            display: flex;
+            width: 900px;
             height: 500px;
-            color: white;
-
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        h1 {
-            margin-bottom: 30px;
-            font-size: 42px;
+        .login-form {
+            width: 50%;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        h2 {
-            margin-bottom: 50px;
-            font-size: 32px;
+        .login-form h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .input-group {
-            position: relative;
             width: 100%;
             margin-bottom: 20px;
         }
 
         label {
-            position: absolute;
-            top: -30px;
-            left: 100px;
-            font-size: 16px;
-            /* color: white; */
-            /* background: rgba(31, 91, 110, 0.8); */
-            padding: 2px 6px;
-            border-radius: 5px;
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #555;
         }
 
         input {
-            width: 60%;
-            padding: 8px;
-            border: 1px solid #ddd;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
             border-radius: 8px;
             font-size: 16px;
-            background: white;
-            margin-bottom: 20px;
+            outline: none;
         }
 
         .login-button {
-            background: #9FCCEBFF;
+            background: #28a745;
             border: none;
             padding: 12px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 20px;
-            width: 30%;
-            margin-top: 10px;
-            color: black;
-            font-weight: 500;
+            font-size: 18px;
+            color: white;
+            font-weight: bold;
+            width: 100%;
         }
 
         .login-button:hover {
-            background: #87afc7;
+            background: #218838;
+        }
+
+        .image-container {
+            width: 50%;
+            background: url('img/medical.jpg') no-repeat center center;
+            background-size: cover;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
-    
-<div class="login-container">
-    <div class="container">
-    <h1>Welcome, Admin</h1>        
+
+<div class="container">
+    <div class="login-form">
         <h2>Login to Pulse+</h2>
 
         <!-- Show error messages if any -->
@@ -171,8 +168,8 @@ $conn->close();
             <button type="submit" class="login-button">Login</button>
         </form>
     </div>
+    <div class="image-container"></div>
+</div>
 
-
-    </div>
 </body>
 </html>
