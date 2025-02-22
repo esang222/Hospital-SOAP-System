@@ -157,7 +157,7 @@ $conn->close();
             display: flex;
             justify-content: flex-end;
             padding: 20px;
-        } -->
+        }
 
         section {
             display: flex;
@@ -268,21 +268,15 @@ $conn->close();
         <section>
             <div class="main">
                 <div class="container">
-                    <div class="forms">
-                        <label for="first_name">Patient's Full Name:</label>
-                        <input type="text" id="first_name" name="first_name">
+                    <form method="POST" action="addAppointment.php" class="forms">
+                        <label for="patient_id">Patient ID:</label>
+                        <input type="text" id="patient_id" name="patient_id">
 
-                        <label for="last_name">Email:</label>
-                        <input type="text" id="last_name" name="last_name">
+                        <label for="doctor_id">Doctor ID:</label>
+                        <input type="text" id="doctor_id" name="doctor_id">
 
-                        <label for="contact">Contact Number:</label>
-                        <input type="tel" id="contact" name="contact">
-
-                        <label for="doa">Date of Appointment:</label>
-                        <input type="date" id="dob" name="dob">
-
-                        <label for="toa">Time of Appointment:</label>
-                        <input type="time" id="time" name="time">
+                        <label for="appointment_date">Date of Appointment:</label>
+                        <input type="date" id="appointment_date" name="appointment_date">
 
                         <label for="age">Reason of Appointment:</label>
                         <input type="text" id="age" name="age">
