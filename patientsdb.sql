@@ -54,4 +54,4 @@ CREATE TABLE IF NOT EXISTS soap_notes (
 
 INSERT INTO users (username, password, email, contact) VALUES
 ('admin01', 'password123', 'admin01@gmail.com', '09123450001');
-
+ 

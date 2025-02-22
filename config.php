@@ -1,5 +1,6 @@
 <?php
-
+$profileImage = 'img/admin.png';
+$adminName = 'Admin01';
 $servername = "127.0.0.1";
 $username = "root";
 $password = "";

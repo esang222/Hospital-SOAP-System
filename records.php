@@ -1,37 +1,23 @@
 <?php
-// Include the configuration file for database connection
-include 'config.php'; // Ensure this file properly initializes $conn
+include 'config.php'; 
 
-// Default profile image and admin name
-$profileImage = 'img/hehe.jpg';
-$adminName = 'Admin01';
+// Join the soap_notes table with patients to fetch the patient's full name and SOAP note details
+$sql = "SELECT 
+            s.id, 
+            p.full_name, 
+            s.subjective, 
+            s.objective, 
+            s.assessment, 
+            s.plan, 
+            s.created_at 
+        FROM soap_notes s
+        INNER JOIN patients p ON s.patient_id = p.id
+        ORDER BY s.created_at DESC";
 
-// // Ensure database connection is established
-// if (!isset($conn)) {
-//     die("Database connection is not initialized.");
-// }
-
-// // Fetch SOAP notes with all relevant fields
-// $sql = "SELECT 
-//             s.id, 
-//             p.full_name AS patient_name, 
-//             s.subjective, 
-//             s.objective, 
-//             s.assessment, 
-//             s.plan, 
-//             s.created_at, 
-//             s.updated_at 
-//         FROM soap_notes s
-//         INNER JOIN patients p ON s.patient_id = p.id 
-//         ORDER BY s.created_at DESC"; // Sort by most recent notes
-
-// // Execute the query
-// $result = $conn->query($sql);
-
-// // Check for query errors
-// if (!$result) {
-//     die("Error fetching SOAP notes: " . $conn->error);
-// }
+$result = $conn->query($sql);
+if (!$result) {
+    die("Error fetching SOAP notes: " . $conn->error);
+}
 ?>
 
 <!DOCTYPE html>
@@ -57,7 +43,7 @@ $adminName = 'Admin01';
             background-color: #f9f9f9;
         }
 
-        .sidebar {
+          .sidebar {
             width: 320px;
             background-color: #176B87;
             color: white;
@@ -67,6 +53,7 @@ $adminName = 'Admin01';
             text-wrap: nowrap;
             display: flex;
             flex-direction: column; 
+            box-shadow: 3px 3px 10px gray;        
         }
 
         .profile {
@@ -82,7 +69,6 @@ $adminName = 'Admin01';
             height: 100px;
             background-color: white;
             border-radius: 50%;
-            margin-right: 10px;
         }
 
         .profile-name {
@@ -131,7 +117,7 @@ $adminName = 'Admin01';
             background-color: #176B87;
             padding: 20px;
             color: white;
-            border-radius: 20px;
+            border-radius: 15px;
         }
 
         header h1 {
@@ -140,10 +126,11 @@ $adminName = 'Admin01';
         }
 
         .table-container {
-            background: white;
-            padding: 20px;
+            /* background: white ; */
+            /* padding: 20px; */
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); 
+            margin-top: 30px;
         }
 
         table {
@@ -152,8 +139,8 @@ $adminName = 'Admin01';
         }
 
         table, th, td {
-            border: 1px solid #ddd;
-            text-align: left;
+            border: 1px solid gray;
+            text-align: center;
         }
 
         th, td {
@@ -161,8 +148,8 @@ $adminName = 'Admin01';
         }
 
         th {
-            background-color: #176B87;
-            color: white;
+            background-color: #B2DBED ;
+            color: black;
         }
 
         .view-btn {
@@ -191,7 +178,7 @@ $adminName = 'Admin01';
             <li><i class="fa-solid fa-house"></i> <a href="dashboard.php">Dashboard</a></li>
             <li><i class="fa-solid fa-hospital-user"></i> <a href="patients.php">Patient Management</a></li>
             <li><i class="fa-solid fa-calendar-check"></i> <a href="appointment.php">Appointments</a></li>
-            <li><i class="fa-solid fa-notes-medical"></i> <a href="Subjective.php">SOAP Notes</a></li>
+            <li><i class="fa-solid fa-notes-medical"></i> <a href="SOAP.php">SOAP Notes</a></li>
             <li><i class="fa-solid fa-laptop-medical"></i> <a href="records.php">Records</a></li>
             <li><i class="fa-solid fa-gear"></i> <a href="#">Settings</a></li>
             <li><i class="fa-solid fa-right-from-bracket"></i> <a href="login.php">Logout</a></li>
@@ -217,24 +204,23 @@ $adminName = 'Admin01';
                 </tr>
             </thead>
             <tbody>
-                <?php
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row["patient_name"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["date"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["subjective"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["objective"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["assessment"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["plan"]) . "</td>";
-                        echo "</tr>";
+                    <?php
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . htmlspecialchars($row["full_name"]) . "</td>";
+                            echo "<td>" . htmlspecialchars($row["created_at"]) . "</td>";
+                            echo "<td>" . htmlspecialchars($row["subjective"]) . "</td>";
+                            echo "<td>" . nl2br(htmlspecialchars($row["objective"])) . "</td>";
+                            echo "<td>" . htmlspecialchars($row["assessment"]) . "</td>";
+                            echo "<td>" . htmlspecialchars($row["plan"]) . "</td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='6'>No SOAP notes found.</td></tr>";
                     }
-                } else {
-                    echo "<tr><td colspan='7'>No SOAP notes found.</td></tr>";
-                }
-                
-                ?>
-            </tbody>
+                    ?>
+                </tbody>
         </table>
     </div>
 </div>
