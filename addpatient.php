@@ -1,6 +1,55 @@
+<?php 
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "hospital_soap_system";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    $email = $_POST['email'];
+    $dob = $_POST['dob'];
+    $age = $_POST['age'];
+    $sex = $_POST['sex'];
+    $address = $_POST['address'];
+    $contact = $_POST['contact'];
+
+    $full_name = $first_name . ' ' . $last_name;
+
+    $sql = "INSERT INTO patients (full_name, sex, dob, age, contact) VALUES (?, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssds", $full_name, $sex, $dob, $age, $contact);
+
+    if ($stmt->execute()) {
+        header("Location: addpatient.php?success=1");
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+?>
+
 <?php
 $profileImage = "img/hehe.jpg"; 
 $adminName = 'Admin01';
+?>
+
+<?php 
+if (isset($_GET['success']) && $_GET['success'] == 1) {
+    echo "<script>alert('Patient added successfully!');</script>";
+}
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +90,6 @@ $adminName = 'Admin01';
             flex-direction: column; 
         }
 
-
         .profile {
             display: flex;
             margin-bottom: 20px;
@@ -73,7 +121,6 @@ $adminName = 'Admin01';
             border-radius: 10px;
             background-color: #668C9CFF;
         }
-
 
         aside ul li {
             padding: 25px 10px;
@@ -235,24 +282,24 @@ $adminName = 'Admin01';
         <section>
             <div class="main">
                 <div class="container">
-                    <div class="forms">
+                    <form action="addpatient.php" method="POST" class="forms" onsubmit="return validateForm()">
                         <label for="first_name">First Name:</label>
-                        <input type="text" id="first_name" name="first_name">
+                        <input type="text" id="first_name" name="first_name" required>
 
                         <label for="last_name">Last Name:</label>
-                        <input type="text" id="last_name" name="last_name">
+                        <input type="text" id="last_name" name="last_name" required>
 
-                        <label for="last_name">Email:</label>
-                        <input type="text" id="email" name="email">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
 
                         <label for="dob">Date of Birth:</label>
-                        <input type="date" id="dob" name="dob">
+                        <input type="date" id="dob" name="dob" required>
 
                         <label for="age">Age:</label>
-                        <input type="number" id="age" name="age">
+                        <input type="number" id="age" name="age" required>
 
                         <label for="sex">Sex:</label>
-                        <select id="sex" name="sex">
+                        <select id="sex" name="sex" required>
                             <option value="" selected disabled>Select</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -260,17 +307,16 @@ $adminName = 'Admin01';
                         </select>
 
                         <label for="address">Address:</label>
-                        <input type="text" id="address" name="address">
+                        <input type="text" id="address" name="address" required>
 
                         <label for="contact">Contact Number:</label>
-                        <input type="tel" id="contact" name="contact">
-                    </div>
+                        <input type="tel" id="contact" name="contact" required>
 
-                    <div class="buttons">
-                        <a href="patients.php"><button id="cancel">Cancel</button></a>
-                        <button id="save">Save</button>
-                    </div>
-                    
+                        <div class="buttons">
+                            <a href="patients.php"><button type="button" id="cancel">Cancel</button></a>
+                            <button type="submit" id="save">Save</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </section>
