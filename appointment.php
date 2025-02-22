@@ -1,26 +1,24 @@
 <?php
 $profileImage = 'img/hehe.jpg.';
 $adminName = 'Admin01';
-include 'config.php';
+// include 'config.php';
 
 
-// Establish database connection if not already set
-if (!isset($conn)) {
-    $conn = new mysqli("127.0.0.1", "root", "", "hospital_soap_system");
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-}
+// // Establish database connection if not already set
+// if (!isset($conn)) {
+//     $conn = new mysqli("127.0.0.1", "root", "", "hospital_soap_system");
+//     if ($conn->connect_error) {
+//         die("Connection failed: " . $conn->connect_error);
+//     }
+// }
 
-$sql = "SELECT a.id, p.full_name AS patient_name, p.contact, 
-               u.username AS doctor_name, a.appointment_date, a.status, a.notes
-        FROM appointments a
-        JOIN patients p ON a.patient_id = p.id
-        JOIN users u ON a.doctor_id = u.id
-        WHERE u.role = 'Doctor'
-        ORDER BY a.appointment_date DESC";
+// $sql = "SELECT a.id, p.full_name AS patient_name, p.contact, 
+//                a.doctor_name, a.appointment_date, a.reason, a.status, a.notes
+//         FROM appointments a
+//         JOIN patients p ON a.patient_id = p.id
+//         ORDER BY a.appointment_date DESC";
 
-$result = $conn->query($sql);
+// $result = $conn->query($sql);
 ?>
       
 <!DOCTYPE html>
@@ -269,7 +267,7 @@ $result = $conn->query($sql);
                 <td><?php echo htmlspecialchars($row['contact']); ?></td>
                 <td><?php echo htmlspecialchars($row['doctor_name']); ?></td>
                 <td><?php echo htmlspecialchars($row['appointment_date']); ?></td>
-                <td><?php echo htmlspecialchars($row['notes']); ?></td>
+                <td><?php echo htmlspecialchars($row['reason']); ?></td>
                 <td class="<?php echo ($row['status'] == 'Scheduled') ? 'text-success' : 'text-danger'; ?>">
                     <?php echo htmlspecialchars($row['status']); ?>
                 </td>
