@@ -1,3 +1,49 @@
+<?php
+session_start();
+include "config.php";
+
+// Handle Login
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+
+    // Check if fields are empty
+    if (empty($username) || empty($password)) {
+        $_SESSION['error'] = "Username and Password are required!";
+        header("Location: login.php");
+        exit();
+    }
+
+    // Prepare and execute query
+    $stmt = $conn->prepare("SELECT id, username, password, role FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        if (password_verify($password, $row['password'])) {
+            $_SESSION['user_id'] = $row['id'];
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['role'] = $row['role'];
+
+            // Redirect to dashboard
+            header("Location: dashboard.php");
+            exit();
+        } else {
+            $_SESSION['error'] = "Invalid password!";
+        }
+    } else {
+        $_SESSION['error'] = "User not found!";
+    }
+
+    // Redirect back with an error message
+    header("Location: login.php");
+    exit();
+}
+
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,11 +139,16 @@
 </head>
 <body>
     
-    <div class="login-container">
+<div class="login-container">
         <h1>Welcome, Admin</h1>        
         <h2>Login to Pulse+</h2>
 
-        <form method="POST" action="">
+        <!-- Show error messages if any -->
+        <?php if (isset($_SESSION['error'])): ?>
+            <p class="error-message"><?= $_SESSION['error']; unset($_SESSION['error']); ?></p>
+        <?php endif; ?>
+
+        <form method="POST" action="login.php">
             <div class="input-group">
                 <label for="username">Username</label>
                 <input type="text" name="username" id="username" required>
@@ -109,5 +160,6 @@
             <button type="submit" class="login-button">Login</button>
         </form>
     </div>
+
 </body>
 </html>
