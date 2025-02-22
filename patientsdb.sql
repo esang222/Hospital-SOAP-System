@@ -2,7 +2,6 @@
 CREATE DATABASE IF NOT EXISTS hospital_soap_system;
 USE hospital_soap_system;
 
--- 2. Users Table (Removed 'role')
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -11,7 +10,6 @@ CREATE TABLE IF NOT EXISTS users (
     contact VARCHAR(15) NOT NULL UNIQUE
 );
 
--- 3. Patients Table
 CREATE TABLE IF NOT EXISTS patients (
     id INT AUTO_INCREMENT PRIMARY KEY,
     full_name VARCHAR(255) NOT NULL,
@@ -21,8 +19,6 @@ CREATE TABLE IF NOT EXISTS patients (
     contact VARCHAR(15) NOT NULL UNIQUE
 );
 
--- 4. Appointments Table
---    Storing `doctor_name` as a simple VARCHAR field (no doctor table).
 CREATE TABLE IF NOT EXISTS appointments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL,
@@ -33,7 +29,6 @@ CREATE TABLE IF NOT EXISTS appointments (
     FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE
 );
 
--- 5. Medical Records Table
 CREATE TABLE IF NOT EXISTS medical_records (
     id INT AUTO_INCREMENT PRIMARY KEY,
     appointment_id INT NOT NULL,
@@ -45,7 +40,6 @@ CREATE TABLE IF NOT EXISTS medical_records (
     FOREIGN KEY (appointment_id) REFERENCES appointments(id) ON DELETE CASCADE
 );
 
--- 6. SOAP Notes Table
 CREATE TABLE IF NOT EXISTS soap_notes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL,
@@ -58,7 +52,6 @@ CREATE TABLE IF NOT EXISTS soap_notes (
     FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE
 );
 
--- 9. Insert sample data into users (Removed 'role')
 INSERT INTO users (username, password, email, contact) VALUES
 ('admin01', 'password123', 'admin01@gmail.com', '09123450001');
 
