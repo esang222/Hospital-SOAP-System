@@ -7,9 +7,9 @@ $servername = "127.0.0.1";
 $username = "root";
 $password = "";
 $database = "hospital_soap_system";
-$port = 3306;//baguhin na lng tong port sa 3306
+$port = 3307;//baguhin na lng tong port sa 3306
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $database, $port);
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -290,11 +290,23 @@ $conn->close();
                         <label for="doctor">Doctor:</label>
                         <select id="doctor" name="doctor">
                             <option value="" selected disabled>Select a Doctor</option>
+                            <option value="drSmith">Dr. John Smith</option>
+                            <option value="drLee">Dr. Alice Lee</option>
+                            <option value="drPatel">Dr. Raj Patel</option>
+                            <option value="drKim">Dr. Michael Kim</option>
+                            <option value="drGarcia">Dr. Maria Garcia</option>
+                            <option value="drBrown">Dr. James Brown</option>
                         </select>
 
                         <label for="specialty">Specialty:</label>
                         <select id="specialty" name="specialty">
                             <option value="" selected disabled>Select a Specialty</option>
+                            <option value="cardiology">Cardiology</option>
+                            <option value="neurology">Neurology</option>
+                            <option value="dermatology">Dermatology</option>
+                            <option value="pediatrics">Pediatrics</option>
+                            <option value="orthopedics">Orthopedics</option>
+                            <option value="gynecology">Gynecology</option>
                         </select>
                 </div>
                     <div class="buttons">
