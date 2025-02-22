@@ -1,9 +1,6 @@
 <?php 
 include 'config.php';
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $first_name = $_POST['first_name'];
@@ -28,19 +25,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 
+    if (isset($_GET['success']) && $_GET['success'] == 1) {
+        echo "<script>alert('Patient added successfully!');</script>";
+    }
+
     $stmt->close();
 }
 
 $conn->close();
-?>
-
-<?php
-$profileImage = "img/hehe.jpg"; 
-$adminName = 'Admin01';
-
-if (isset($_GET['success']) && $_GET['success'] == 1) {
-    echo "<script>alert('Patient added successfully!');</script>";
-}
 ?>
 
 <!DOCTYPE html>
