@@ -7,9 +7,9 @@ $servername = "127.0.0.1";
 $username = "root";
 $password = "";
 $database = "hospital_soap_system";
-$port = 3306;//baguhin na lng tong port sa 3306
+$port = 3306; // Ensure the port is set correctly
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $database, $port);
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -157,7 +157,7 @@ $conn->close();
             display: flex;
             justify-content: flex-end;
             padding: 20px;
-        } -->
+        }
 
         section {
             display: flex;
@@ -268,39 +268,27 @@ $conn->close();
         <section>
             <div class="main">
                 <div class="container">
-                    <div class="forms">
-                        <label for="first_name">Patient's Full Name:</label>
-                        <input type="text" id="first_name" name="first_name">
+                    <form method="POST" action="addAppointment.php" class="forms">
+                        <label for="patient_id">Patient ID:</label>
+                        <input type="text" id="patient_id" name="patient_id">
 
-                        <label for="last_name">Email:</label>
-                        <input type="text" id="last_name" name="last_name">
+                        <label for="doctor_id">Doctor ID:</label>
+                        <input type="text" id="doctor_id" name="doctor_id">
 
-                        <label for="contact">Contact Number:</label>
-                        <input type="tel" id="contact" name="contact">
+                        <label for="appointment_date">Date of Appointment:</label>
+                        <input type="date" id="appointment_date" name="appointment_date">
 
-                        <label for="doa">Date of Appointment:</label>
-                        <input type="date" id="dob" name="dob">
+                        <label for="notes">Notes:</label>
+                        <input type="text" id="notes" name="notes">
 
-                        <label for="toa">Time of Appointment:</label>
-                        <input type="time" id="time" name="time">
-
-                        <label for="age">Reason of Appointment:</label>
-                        <input type="text" id="age" name="age">
-
-                        <label for="doctor">Doctor:</label>
-                        <select id="doctor" name="doctor">
-                            <option value="" selected disabled>Select a Doctor</option>
-                        </select>
-
-                        <label for="specialty">Specialty:</label>
-                        <select id="specialty" name="specialty">
-                            <option value="" selected disabled>Select a Specialty</option>
-                        </select>
+                        <!-- Add other necessary fields as needed -->
+                        
+                        <div class="buttons">
+                            <a href="appointment.php"><button type="button" id="cancel">Cancel</button></a>
+                            <button type="submit" id="save">Save</button>
+                        </div>
+                    </form>
                 </div>
-                    <div class="buttons">
-                        <a href="appointment.php"><button id="cancel">Cancel</button></a>
-                        <button id="save">Save</button>
-                    </div>
             </div>
         </section>
     </div>
