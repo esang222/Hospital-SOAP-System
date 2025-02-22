@@ -16,11 +16,10 @@ $todaysAppointments = ($resultAppointments->num_rows > 0) ? $resultAppointments-
 // Fetch upcoming appointments (appointments from today onward)
 $sql = "SELECT a.id, a.appointment_date AS date, 
                p.full_name AS patientName, 
-               u.username AS doctor, 
+               a.doctor_name AS doctor, 
                a.status
         FROM appointments a
         JOIN patients p ON a.patient_id = p.id
-        JOIN users u ON a.doctor_id = u.id
         WHERE a.appointment_date >= CURDATE()
         ORDER BY a.appointment_date ASC";
 
@@ -64,7 +63,11 @@ if ($result->num_rows > 0) {
             color: white;
             padding: 15px;
             height: 100%;
+            box-sizing: border-box;
             text-wrap: nowrap;
+            display: flex;
+            flex-direction: column; 
+            box-shadow: 3px 3px 10px gray;        
         }
 
         .profile {
@@ -80,7 +83,6 @@ if ($result->num_rows > 0) {
             height: 100px;
             background-color: white;
             border-radius: 50%;
-            margin-right: 10px;
         }
 
         .profile-name {
@@ -127,7 +129,7 @@ if ($result->num_rows > 0) {
             background-color: #176B87;
             padding: 20px;
             color: white;
-            border-radius: 20px;
+            border-radius: 15px;
             margin-bottom: 50px;
         }
 
@@ -221,6 +223,12 @@ if ($result->num_rows > 0) {
             text-decoration: underline;
         }
 
+        .btn-container{
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
         .quick-actions {
             margin-top: 20px;
         }
@@ -245,7 +253,7 @@ if ($result->num_rows > 0) {
         .action-buttons {
             display: flex;
             gap: 50px;
-            margin-top: 30px;
+            margin-top: 10px;
             align-items: center;
             justify-content: center;
         }
@@ -264,8 +272,7 @@ if ($result->num_rows > 0) {
             margin-left: 100px;
             width: 80%;
             justify-content: center;
-            text-decoration: none;        
-
+            text-decoration: none;    
         }
 
         .action-buttons a {
@@ -275,6 +282,7 @@ if ($result->num_rows > 0) {
         .action-buttons button:hover {
             background-color: #244958FF;
         }
+
     </style>
 </head>
 <body>
@@ -288,14 +296,14 @@ if ($result->num_rows > 0) {
         </div>    
         <aside>
             <ul>
-                <li><i class="fa-solid fa-house"></i></i>
+                <li><i class="fa-solid fa-house"></i>
                 <a href="dashboard.php">Dashboard</a></li>
                 <li><i class="fa-solid fa-hospital-user" style="color: #ffffff;"></i>
                 <a href="patients.php">Patient Management</a></li>
                 <li><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i>
                 <a href="appointment.php">Appointments</a></li>
                 <li><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i>
-                <a href="Subjective.php">SOAP Notes</a></li>
+                <a href="SOAP.php">SOAP Notes</a></li>
                 <li><i class="fa-solid fa-laptop-medical"></i>
                 <a href="records.php">Records</a></li>
                 <li><i class="fa-solid fa-gear" style="color: #ffffff;"></i>
@@ -304,7 +312,7 @@ if ($result->num_rows > 0) {
                 <a href="login.php">Logout</a></li>
             </ul>
         </aside>
-</div>
+    </div>
 
 <div class="main-content">
     <header>
@@ -321,41 +329,50 @@ if ($result->num_rows > 0) {
     </div>
 
     <div class="appointments-section">
-        <h3><i class="fa-solid fa-calendar-check"></i> Upcoming Appointments</h3>
-        <table class="appointments-table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Patient Name</th>
-                    <th>Doctor</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
+    <h3><i class="fa-solid fa-calendar-check"></i> Upcoming Appointments</h3>
+    <table class="appointments-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Patient Name</th>
+                <th>Doctor</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($upcomingAppointments)): ?>
                 <?php foreach ($upcomingAppointments as $appointment): ?>
-                <tr>
-                    <td><?php echo $appointment['date']; ?></td>
-                    <td><?php echo $appointment['patientName']; ?></td>
-                    <td><?php echo $appointment['doctor']; ?></td>
-                    <td><?php echo $appointment['status']; ?></td>
-                    <td><a href="#" class="view-link">View</a></td>
-                </tr>
+                    <tr>
+                        <td><?php echo htmlspecialchars($appointment['date']); ?></td>
+                        <td><?php echo htmlspecialchars($appointment['patientName']); ?></td>
+                        <td><?php echo htmlspecialchars($appointment['doctor']); ?></td>
+                        <td class="<?php echo ($appointment['status'] == 'Scheduled') ? 'text-success' : (($appointment['status'] == 'Cancelled') ? 'text-danger' : 'text-warning'); ?>">
+                            <?php echo htmlspecialchars($appointment['status']); ?>
+                        </td>
+                        <td>
+                            <a href="appointment.php?id=<?php echo htmlspecialchars($appointment['id']); ?>" class="view-link">View</a>
+                        </td>
+                    </tr>
                 <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    
+            <?php else: ?>
+                <tr>
+                    <td colspan="5" class="text-center">No appointments found.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
+
     <div class="quick-actions">
         <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
         <div class="action-buttons">
             <a href="addpatient.php"><button><i class="fa-solid fa-user-plus"></i> Add New Patient</button></a>
-            <a href="appointment.php"><button><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i> Schedule Appointment</button></a>
-            <a href="Subjective.php"><button><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i> Create SOAP Note</button></a>
+            <a href="addAppointment.php"><button><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i> Schedule Appointment</button></a>
+            <a href="SOAP.php"><button><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i> Create SOAP Note</button></a>
         </div>
     </div>
     </section>
-
     
 </div>
 
