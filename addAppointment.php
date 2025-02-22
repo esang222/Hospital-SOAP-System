@@ -7,7 +7,7 @@ $servername = "127.0.0.1";
 $username = "root";
 $password = "";
 $database = "hospital_soap_system";
-$port = 3307;//baguhin na lng tong port sa 3306
+$port = 3306; // Ensure the port is set correctly
 
 $conn = new mysqli($servername, $username, $password, $database, $port);
 
@@ -17,14 +17,13 @@ if ($conn->connect_error) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $patientId = $_POST['patient_id'];
-    $doctorId = $_POST['doctor_id'];
+    $doctorName = $_POST['doctor_name'];
     $appointmentDate = $_POST['appointment_date'];
     $status = 'Scheduled';
-    $notes = $_POST['notes'];
+    $reason = $_POST['reason'];
 
-    
-    $stmt = $conn->prepare("INSERT INTO appointments (patient_id, doctor_id, appointment_date, status, notes) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("iisss", $patientId, $doctorId, $appointmentDate, $status, $notes);
+    $stmt = $conn->prepare("INSERT INTO appointments (patient_id, doctor_name, appointment_date, status, reason) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("issss", $patientId, $doctorName, $appointmentDate, $status, $reason);
 
     if ($stmt->execute()) {
         echo "New appointment created successfully";
@@ -272,41 +271,23 @@ $conn->close();
                         <label for="patient_id">Patient ID:</label>
                         <input type="text" id="patient_id" name="patient_id">
 
-                        <label for="doctor_id">Doctor ID:</label>
-                        <input type="text" id="doctor_id" name="doctor_id">
+                        <label for="doctor_name">Doctor Name:</label>
+                        <input type="text" id="doctor_name" name="doctor_name">
 
                         <label for="appointment_date">Date of Appointment:</label>
-                        <input type="date" id="appointment_date" name="appointment_date">
+                        <input type="datetime-local" id="appointment_date" name="appointment_date">
 
-                        <label for="age">Reason of Appointment:</label>
-                        <input type="text" id="age" name="age">
+                        <label for="reason">Reason:</label>
+                        <input type="text" id="reason" name="reason">
 
-                        <label for="doctor">Doctor:</label>
-                        <select id="doctor" name="doctor">
-                            <option value="" selected disabled>Select a Doctor</option>
-                            <option value="drSmith">Dr. John Smith</option>
-                            <option value="drLee">Dr. Alice Lee</option>
-                            <option value="drPatel">Dr. Raj Patel</option>
-                            <option value="drKim">Dr. Michael Kim</option>
-                            <option value="drGarcia">Dr. Maria Garcia</option>
-                            <option value="drBrown">Dr. James Brown</option>
-                        </select>
-
-                        <label for="specialty">Specialty:</label>
-                        <select id="specialty" name="specialty">
-                            <option value="" selected disabled>Select a Specialty</option>
-                            <option value="cardiology">Cardiology</option>
-                            <option value="neurology">Neurology</option>
-                            <option value="dermatology">Dermatology</option>
-                            <option value="pediatrics">Pediatrics</option>
-                            <option value="orthopedics">Orthopedics</option>
-                            <option value="gynecology">Gynecology</option>
-                        </select>
+                        <!-- Add other necessary fields as needed -->
+                        
+                        <div class="buttons">
+                            <a href="appointment.php"><button type="button" id="cancel">Cancel</button></a>
+                            <button type="submit" id="save">Save</button>
+                        </div>
+                    </form>
                 </div>
-                    <div class="buttons">
-                        <a href="appointment.php"><button id="cancel">Cancel</button></a>
-                        <button id="save">Save</button>
-                    </div>
             </div>
         </section>
     </div>
