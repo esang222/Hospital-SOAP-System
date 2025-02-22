@@ -1,7 +1,18 @@
 <?php
 include 'config.php'; 
 
-// Join the soap_notes table with patients to fetch the patient's full name and SOAP note details
+// Handle search
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$searchQuery = "";
+$searchParams = [];
+
+if (!empty($search)) {
+    $searchQuery = "WHERE p.full_name LIKE ? OR s.subjective LIKE ? OR s.objective LIKE ? OR s.assessment LIKE ? OR s.plan LIKE ?";
+    $searchTerm = "%$search%";
+    $searchParams = [$searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm];
+}
+
+// Fetch SOAP notes with search functionality
 $sql = "SELECT 
             s.id, 
             p.full_name, 
@@ -12,9 +23,17 @@ $sql = "SELECT
             s.created_at 
         FROM soap_notes s
         INNER JOIN patients p ON s.patient_id = p.id
+        $searchQuery
         ORDER BY s.created_at DESC";
 
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+
+if (!empty($search)) {
+    $stmt->bind_param("sssss", ...$searchParams);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
 if (!$result) {
     die("Error fetching SOAP notes: " . $conn->error);
 }
@@ -43,7 +62,7 @@ if (!$result) {
             background-color: #f9f9f9;
         }
 
-          .sidebar {
+        .sidebar {
             width: 320px;
             background-color: #176B87;
             color: white;
@@ -103,6 +122,41 @@ if (!$result) {
             font-size: 26px;
         }
 
+        .search-bar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .search-bar i {
+            margin-right: 10px;
+        }
+
+        .search-bar input {
+            padding: 8px;
+            margin-right: 10px;
+            border-radius: 10px;
+            width: 15rem;
+            font-size: 14px;
+            border: 2px solid gray;
+        }
+
+        .search-bar button {
+            padding: 10px 15px;
+            background-color: #176B87;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 16px;
+            box-shadow: 3px 2px 5px rgba(0, 0, 0, 0.4);
+        }
+
+        .search-bar button:hover {
+            background-color: #09546D;
+        }
+
         .main-content {
             flex-grow: 1;
             padding: 20px 50px;
@@ -126,8 +180,6 @@ if (!$result) {
         }
 
         .table-container {
-            /* background: white ; */
-            /* padding: 20px; */
             border-radius: 10px;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); 
             margin-top: 30px;
@@ -148,7 +200,7 @@ if (!$result) {
         }
 
         th {
-            background-color: #B2DBED ;
+            background-color: #B2DBED;
             color: black;
         }
 
@@ -190,7 +242,12 @@ if (!$result) {
     <header>
         <h1>SOAP Notes Records</h1>
     </header>
-
+    <div class="search-bar">
+        <form method="GET" action="">
+            <input type="text" name="search" placeholder="Search" value="<?php echo htmlspecialchars($search); ?>">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+        </form>
+    </div>
     <div class="table-container">
         <table>
             <thead>
@@ -204,23 +261,23 @@ if (!$result) {
                 </tr>
             </thead>
             <tbody>
-                    <?php
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr>";
-                            echo "<td>" . htmlspecialchars($row["full_name"]) . "</td>";
-                            echo "<td>" . htmlspecialchars($row["created_at"]) . "</td>";
-                            echo "<td>" . htmlspecialchars($row["subjective"]) . "</td>";
-                            echo "<td>" . nl2br(htmlspecialchars($row["objective"])) . "</td>";
-                            echo "<td>" . htmlspecialchars($row["assessment"]) . "</td>";
-                            echo "<td>" . htmlspecialchars($row["plan"]) . "</td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='6'>No SOAP notes found.</td></tr>";
+                <?php
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($row["full_name"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["created_at"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["subjective"]) . "</td>";
+                        echo "<td>" . nl2br(htmlspecialchars($row["objective"])) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["assessment"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["plan"]) . "</td>";
+                        echo "</tr>";
                     }
-                    ?>
-                </tbody>
+                } else {
+                    echo "<tr><td colspan='6'>No SOAP notes found.</td></tr>";
+                }
+                ?>
+            </tbody>
         </table>
     </div>
 </div>
