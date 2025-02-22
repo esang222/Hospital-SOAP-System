@@ -5,8 +5,11 @@ include 'config.php';
 $profileImage = 'img/hehe.jpg'; 
 $adminName = 'Admin Name'; 
 
-// Define SQL query to fetch patient data
-$sql = "SELECT id, full_name, sex, dob, age, contact FROM patients"; 
+$sql = "SELECT p.id, p.full_name, p.sex, p.dob, p.age, p.contact, COUNT(a.id) AS total_appointments
+        FROM patients p
+        LEFT JOIN appointments a ON p.id = a.patient_id
+        GROUP BY p.id";
+
 $result = $conn->query($sql);
 
 $patients = [];

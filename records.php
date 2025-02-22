@@ -1,18 +1,37 @@
 <?php
+// Include the configuration file for database connection
+include 'config.php'; // Ensure this file properly initializes $conn
 
-include 'config.php';
+// Default profile image and admin name
 $profileImage = 'img/hehe.jpg';
 $adminName = 'Admin01';
 
-// Connect to database
-// $conn = new mysqli("localhost", "root", "", "hospital_soap_system");
-// if ($conn->connect_error) {
-//     die("Connection failed: " . $conn->connect_error);
+// // Ensure database connection is established
+// if (!isset($conn)) {
+//     die("Database connection is not initialized.");
 // }
 
-// // Fetch SOAP notes
-// $sql = "SELECT id, patient_name, date, diagnosis FROM soap_notes ORDER BY date DESC";
+// // Fetch SOAP notes with all relevant fields
+// $sql = "SELECT 
+//             s.id, 
+//             p.full_name AS patient_name, 
+//             s.subjective, 
+//             s.objective, 
+//             s.assessment, 
+//             s.plan, 
+//             s.created_at, 
+//             s.updated_at 
+//         FROM soap_notes s
+//         INNER JOIN patients p ON s.patient_id = p.id 
+//         ORDER BY s.created_at DESC"; // Sort by most recent notes
+
+// // Execute the query
 // $result = $conn->query($sql);
+
+// // Check for query errors
+// if (!$result) {
+//     die("Error fetching SOAP notes: " . $conn->error);
+// }
 ?>
 
 <!DOCTYPE html>
@@ -82,7 +101,6 @@ $adminName = 'Admin01';
             border-radius: 10px;
             background-color: #668C9CFF;
         }
-
 
         aside ul li {
             padding: 25px 10px;
@@ -169,23 +187,16 @@ $adminName = 'Admin01';
         <div class="profile-name"><?php echo htmlspecialchars($adminName); ?></div>
     </div>
     <aside>
-            <ul>
-                <li><i class="fa-solid fa-house"></i></i>
-                <a href="dashboard.php">Dashboard</a></li>
-                <li><i class="fa-solid fa-hospital-user" style="color: #ffffff;"></i>
-                <a href="patients.php">Patient Management</a></li>
-                <li><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i>
-                <a href="appointment.php">Appointments</a></li>
-                <li><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i>
-                <a href="Subjective.php">SOAP Notes</a></li>
-                <li><i class="fa-solid fa-laptop-medical"></i>
-                <a href="records.php">Records</a></li>
-                <li><i class="fa-solid fa-gear" style="color: #ffffff;"></i>
-                <a href="#">Settings</a></li>
-                <li><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
-                <a href="login.php">Logout</a></li>
-            </ul>
-        </aside>
+        <ul>
+            <li><i class="fa-solid fa-house"></i> <a href="dashboard.php">Dashboard</a></li>
+            <li><i class="fa-solid fa-hospital-user"></i> <a href="patients.php">Patient Management</a></li>
+            <li><i class="fa-solid fa-calendar-check"></i> <a href="appointment.php">Appointments</a></li>
+            <li><i class="fa-solid fa-notes-medical"></i> <a href="Subjective.php">SOAP Notes</a></li>
+            <li><i class="fa-solid fa-laptop-medical"></i> <a href="records.php">Records</a></li>
+            <li><i class="fa-solid fa-gear"></i> <a href="#">Settings</a></li>
+            <li><i class="fa-solid fa-right-from-bracket"></i> <a href="login.php">Logout</a></li>
+        </ul>
+    </aside>
 </div>
 
 <div class="main-content">
@@ -199,8 +210,10 @@ $adminName = 'Admin01';
                 <tr>
                     <th>Patient Name</th>
                     <th>Date</th>
-                    <th>Diagnosis</th>
-                    <th>Action</th>
+                    <th>Subjective</th>
+                    <th>Objective</th>
+                    <th>Assessment</th>
+                    <th>Plan</th>
                 </tr>
             </thead>
             <tbody>
@@ -210,13 +223,16 @@ $adminName = 'Admin01';
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($row["patient_name"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["date"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["diagnosis"]) . "</td>";
-                        echo "<td><a href='view_soap.php?id=" . $row["id"] . "' class='view-btn'>View</a></td>";
+                        echo "<td>" . htmlspecialchars($row["subjective"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["objective"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["assessment"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["plan"]) . "</td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='4'>No SOAP notes found.</td></tr>";
+                    echo "<tr><td colspan='7'>No SOAP notes found.</td></tr>";
                 }
+                
                 ?>
             </tbody>
         </table>
@@ -225,3 +241,8 @@ $adminName = 'Admin01';
 
 </body>
 </html>
+
+<?php
+// Close the database connection
+$conn->close();
+?>

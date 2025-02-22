@@ -323,31 +323,25 @@ if ($result->num_rows > 0) {
     <div class="appointments-section">
         <h3><i class="fa-solid fa-calendar-check"></i> Upcoming Appointments</h3>
         <table class="appointments-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Patient Name</th>
-                        <th>Doctor</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-            <tbody id="appointmentsTableBody">
-            <?php if (!empty($upcomingAppointments)): ?>
-                    <?php foreach ($upcomingAppointments as $appointment): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($appointment['date']); ?></td>
-                            <td><?php echo htmlspecialchars($appointment['patientName']); ?></td>
-                            <td><?php echo htmlspecialchars($appointment['doctor']); ?></td>
-                            <td><?php echo htmlspecialchars($appointment['status']); ?></td>
-                            <td><a href="#" class="view-link">View</a></td>
-                        </tr>
-                    <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="5" style="text-align: center;">No upcoming appointments.</td>
-                        </tr>
-                    <?php endif; ?>           
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Patient Name</th>
+                    <th>Doctor</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($upcomingAppointments as $appointment): ?>
+                <tr>
+                    <td><?php echo $appointment['date']; ?></td>
+                    <td><?php echo $appointment['patientName']; ?></td>
+                    <td><?php echo $appointment['doctor']; ?></td>
+                    <td><?php echo $appointment['status']; ?></td>
+                    <td><a href="#" class="view-link">View</a></td>
+                </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>

@@ -1,6 +1,42 @@
 <?php
 $profileImage = "img/hehe.jpg"; 
 $adminName = 'Admin01';
+
+// Database connection
+$servername = "127.0.0.1";
+$username = "root";
+$password = "";
+$database = "hospital_soap_system";
+$port = 3306;//baguhin na lng tong port sa 3306
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $patientId = $_POST['patient_id'];
+    $doctorId = $_POST['doctor_id'];
+    $appointmentDate = $_POST['appointment_date'];
+    $status = 'Scheduled';
+    $notes = $_POST['notes'];
+
+    
+    $stmt = $conn->prepare("INSERT INTO appointments (patient_id, doctor_id, appointment_date, status, notes) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("iisss", $patientId, $doctorId, $appointmentDate, $status, $notes);
+
+    if ($stmt->execute()) {
+        echo "New appointment created successfully";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+
 ?>
 
 <!DOCTYPE html>
