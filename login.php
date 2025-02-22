@@ -65,21 +65,31 @@ $conn->close();
             justify-content: flex-start;
             align-items: center;
             height: 100vh;
-            background: url('img/medical.jpg') no-repeat center center fixed;
+            background: url('img/medical.') no-repeat center center fixed;
             background-size: cover;
             margin: 0;
         }
 
-        .login-container {
+        .login-container{
+            background-color: #fff;
+            margin-left: 30rem;
+            padding: 60px;
+            border: 1px solid gray;
+            border-radius: 15px;
+            opacity: 90%;
+
+        }
+
+        .container {
             background: rgba(31, 91, 110, 0.8);
             padding: 50px;
             border-radius: 15px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
-            width: 800px;
-            height: 600px;
+            width: 600px;
+            height: 500px;
             color: white;
-            margin-left: 40rem;
+
         }
 
         h1 {
@@ -101,8 +111,8 @@ $conn->close();
         label {
             position: absolute;
             top: -30px;
-            left: 130px;
-            font-size: 18px;
+            left: 100px;
+            font-size: 16px;
             /* color: white; */
             /* background: rgba(31, 91, 110, 0.8); */
             padding: 2px 6px;
@@ -111,7 +121,7 @@ $conn->close();
 
         input {
             width: 60%;
-            padding: 12px;
+            padding: 8px;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
@@ -140,7 +150,8 @@ $conn->close();
 <body>
     
 <div class="login-container">
-        <h1>Welcome, Admin</h1>        
+    <div class="container">
+    <h1>Welcome, Admin</h1>        
         <h2>Login to Pulse+</h2>
 
         <!-- Show error messages if any -->
@@ -161,5 +172,7 @@ $conn->close();
         </form>
     </div>
 
+
+    </div>
 </body>
 </html>
