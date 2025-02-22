@@ -1,37 +1,41 @@
 <?php
-include 'config.php';  // Ensure this file contains the database connection
+include 'config.php'; 
 
-// Check if 'patient_id' is set in the URL query string
-if (isset($_GET['patient_id'])) {
-    $patient_id = $_GET['patient_id'];
+// Handle search
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$searchQuery = "";
+$searchParams = [];
 
-    // Fetch the latest SOAP note data for the given patient
-    $query = "SELECT sn.*, p.full_name FROM soap_notes sn 
-              JOIN patients p ON sn.patient_id = p.id 
-              WHERE sn.patient_id = ? 
-              ORDER BY sn.created_at DESC LIMIT 1";  // Limit to the latest note
+if (!empty($search)) {
+    $searchQuery = "WHERE p.full_name LIKE ? OR s.subjective LIKE ? OR s.objective LIKE ? OR s.assessment LIKE ? OR s.plan LIKE ?";
+    $searchTerm = "%$search%";
+    $searchParams = [$searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm];
+}
 
-    // Prepare the statement
-    $stmt = $conn->prepare($query);
-    
-    if ($stmt === false) {
-        // Query preparation failed
-        echo "Error: " . $conn->error;
-        exit;
-    }
+// Fetch SOAP notes with search functionality
+$sql = "SELECT 
+            s.id, 
+            p.full_name, 
+            s.subjective, 
+            s.objective, 
+            s.assessment, 
+            s.plan, 
+            s.created_at 
+        FROM soap_notes s
+        INNER JOIN patients p ON s.patient_id = p.id
+        $searchQuery
+        ORDER BY s.created_at DESC";
 
-    $stmt->bind_param('i', $patient_id);  // Bind the patient_id as an integer
-    $stmt->execute();
-    $result = $stmt->get_result();
+$stmt = $conn->prepare($sql);
 
-    // Check if data is retrieved
-    if ($result->num_rows == 0) {
-        echo "No records found for patient ID: " . htmlspecialchars($patient_id);
-        exit;
-    }
-} else {
-    echo "No patient ID provided.";
-    exit;
+if (!empty($search)) {
+    $stmt->bind_param("sssss", ...$searchParams);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
+if (!$result) {
+    die("Error fetching SOAP notes: " . $conn->error);
 }
 ?>
 
@@ -41,7 +45,7 @@ if (isset($_GET['patient_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <title>SOAP Notes History</title>
+    <title>Records</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
@@ -65,8 +69,10 @@ if (isset($_GET['patient_id'])) {
             padding: 15px;
             height: 100%;
             box-sizing: border-box;
+            text-wrap: nowrap;
             display: flex;
             flex-direction: column; 
+            box-shadow: 3px 3px 10px gray;        
         }
 
         .profile {
@@ -82,7 +88,6 @@ if (isset($_GET['patient_id'])) {
             height: 100px;
             background-color: white;
             border-radius: 50%;
-            margin-right: 10px;
         }
 
         .profile-name {
@@ -117,6 +122,41 @@ if (isset($_GET['patient_id'])) {
             font-size: 26px;
         }
 
+        .search-bar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .search-bar i {
+            margin-right: 10px;
+        }
+
+        .search-bar input {
+            padding: 8px;
+            margin-right: 10px;
+            border-radius: 10px;
+            width: 15rem;
+            font-size: 14px;
+            border: 2px solid gray;
+        }
+
+        .search-bar button {
+            padding: 10px 15px;
+            background-color: #176B87;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 16px;
+            box-shadow: 3px 2px 5px rgba(0, 0, 0, 0.4);
+        }
+
+        .search-bar button:hover {
+            background-color: #09546D;
+        }
+
         .main-content {
             flex-grow: 1;
             padding: 20px 50px;
@@ -131,7 +171,7 @@ if (isset($_GET['patient_id'])) {
             background-color: #176B87;
             padding: 20px;
             color: white;
-            border-radius: 20px;
+            border-radius: 15px;
         }
 
         header h1 {
@@ -140,10 +180,9 @@ if (isset($_GET['patient_id'])) {
         }
 
         .table-container {
-            background: white;
-            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); 
+            margin-top: 30px;
         }
 
         table {
@@ -152,8 +191,8 @@ if (isset($_GET['patient_id'])) {
         }
 
         table, th, td {
-            border: 1px solid #ddd;
-            text-align: left;
+            border: 1px solid gray;
+            text-align: center;
         }
 
         th, td {
@@ -161,8 +200,8 @@ if (isset($_GET['patient_id'])) {
         }
 
         th {
-            background-color: #176B87;
-            color: white;
+            background-color: #B2DBED;
+            color: black;
         }
 
         .view-btn {
@@ -182,16 +221,16 @@ if (isset($_GET['patient_id'])) {
 <div class="sidebar">
     <div class="profile">
         <div class="profile-icon">
-            <img src="img/hehe.jpg" alt="Profile Image">
+            <img src="<?php echo htmlspecialchars($profileImage); ?>" alt="Profile Image">
         </div>
-        <div class="profile-name">Admin01</div>
+        <div class="profile-name"><?php echo htmlspecialchars($adminName); ?></div>
     </div>
     <aside>
         <ul>
             <li><i class="fa-solid fa-house"></i> <a href="dashboard.php">Dashboard</a></li>
             <li><i class="fa-solid fa-hospital-user"></i> <a href="patients.php">Patient Management</a></li>
             <li><i class="fa-solid fa-calendar-check"></i> <a href="appointment.php">Appointments</a></li>
-            <li><i class="fa-solid fa-notes-medical"></i> <a href="Subjective.php">SOAP Notes</a></li>
+            <li><i class="fa-solid fa-notes-medical"></i> <a href="SOAP.php">SOAP Notes</a></li>
             <li><i class="fa-solid fa-laptop-medical"></i> <a href="records.php">Records</a></li>
             <li><i class="fa-solid fa-gear"></i> <a href="#">Settings</a></li>
             <li><i class="fa-solid fa-right-from-bracket"></i> <a href="login.php">Logout</a></li>
@@ -203,7 +242,12 @@ if (isset($_GET['patient_id'])) {
     <header>
         <h1>SOAP Notes Records</h1>
     </header>
-
+    <div class="search-bar">
+        <form method="GET" action="">
+            <input type="text" name="search" placeholder="Search" value="<?php echo htmlspecialchars($search); ?>">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+        </form>
+    </div>
     <div class="table-container">
         <table>
             <thead>
@@ -221,16 +265,16 @@ if (isset($_GET['patient_id'])) {
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row['full_name']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['subjective']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['objective']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['assessment']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['plan']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["full_name"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["created_at"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["subjective"]) . "</td>";
+                        echo "<td>" . nl2br(htmlspecialchars($row["objective"])) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["assessment"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["plan"]) . "</td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='6'>No records found</td></tr>";
+                    echo "<tr><td colspan='6'>No SOAP notes found.</td></tr>";
                 }
                 ?>
             </tbody>
@@ -240,3 +284,8 @@ if (isset($_GET['patient_id'])) {
 
 </body>
 </html>
+
+<?php
+// Close the database connection
+$conn->close();
+?>
