@@ -1,16 +1,38 @@
 <?php
-$profileImage = "img/hehe.jpg"; 
-$adminName = "Admin01";
-$totalPatients = "";
-$todaysAppointments = "";
-$upcomingAppointments = [
-    [
-        'date' => 'Feb. 20, 2025',
-        'patientName' => 'Albert Alforja',
-        'doctor' => 'Shrek',
-        'status' => 'Scheduled'
-    ],
-];
+// Include database connection
+include "config.php";
+
+// Fetch total patients
+$sqlPatients = "SELECT COUNT(*) AS total FROM patients";
+$resultPatients = $conn->query($sqlPatients);
+$totalPatients = ($resultPatients->num_rows > 0) ? $resultPatients->fetch_assoc()['total'] : 0;
+
+// Fetch today's appointments
+$today = date('Y-m-d');
+$sqlAppointments = "SELECT COUNT(*) AS total FROM appointments WHERE DATE(appointment_date) = '$today'";
+$resultAppointments = $conn->query($sqlAppointments);
+$todaysAppointments = ($resultAppointments->num_rows > 0) ? $resultAppointments->fetch_assoc()['total'] : 0;
+
+// Fetch upcoming appointments (appointments from today onward)
+$sql = "SELECT a.id, a.appointment_date AS date, 
+               p.full_name AS patientName, 
+               u.username AS doctor, 
+               a.status
+        FROM appointments a
+        JOIN patients p ON a.patient_id = p.id
+        JOIN users u ON a.doctor_id = u.id
+        WHERE a.appointment_date >= CURDATE()
+        ORDER BY a.appointment_date ASC";
+
+$result = $conn->query($sql);
+
+$upcomingAppointments = [];
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $upcomingAppointments[] = $row;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -317,13 +339,13 @@ $upcomingAppointments = [
                     <td><?php echo $appointment['patientName']; ?></td>
                     <td><?php echo $appointment['doctor']; ?></td>
                     <td><?php echo $appointment['status']; ?></td>
-                    <td><a href="appointment.php" class="view-link">View</a></td>
+                    <td><a href="#" class="view-link">View</a></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </div>
-
+    
     <div class="quick-actions">
         <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
         <div class="action-buttons">
@@ -336,6 +358,8 @@ $upcomingAppointments = [
 
     
 </div>
+
+
 
 </body>
 </html>
