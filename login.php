@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: dashboard.php");
             exit();
         } else {
-            $_SESSION['error'] = "Invalid password!";
+            $_SESSION['error'] = "Invalid password! Please try again.";
         }
     } else {
         $_SESSION['error'] = "User not found!";
@@ -82,21 +82,29 @@ $conn->close();
 
         .login-form {
             width: 50%;
-            padding: 60px;
+            padding: 10px 60px 40px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
+        .login-form h1 {
+            font-size: 35px;
+            color: #176B87;
+            text-wrap: nowrap;
+            text-align: center;
+            margin: 20px 0;
+        }
+
         .login-form h2 {
-            font-size: 24px;
+            font-size: 20px;
             margin-bottom: 20px;
             text-align: center;
         }
 
         .input-group {
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         label {
@@ -115,8 +123,15 @@ $conn->close();
             outline: none;
         }
 
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
         .login-button {
-            background: #28a745;
+            background: #176B87;
             border: none;
             padding: 12px;
             border-radius: 8px;
@@ -125,10 +140,11 @@ $conn->close();
             color: white;
             font-weight: bold;
             width: 100%;
+            margin-top: 10px;
         }
 
         .login-button:hover {
-            background: #218838;
+            background: #1B5568FF;
         }
 
         .image-container {
@@ -136,25 +152,14 @@ $conn->close();
             background: url('img/medical.jpg') no-repeat center center;
             background-size: cover;
         }
-
-        .error-message {
-            color: red;
-            text-align: center;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="login-form">
-        <h2>Login to Pulse+</h2>
-
-        <!-- Show error messages if any -->
-        <?php if (isset($_SESSION['error'])): ?>
-            <p class="error-message"><?= $_SESSION['error']; unset($_SESSION['error']); ?></p>
-        <?php endif; ?>
+        <h1>Welcome to Pulse+</h1>
+        <h2>Please Login</h2>
 
         <form method="POST" action="login.php">
             <div class="input-group">
@@ -165,6 +170,12 @@ $conn->close();
                 <label for="password">Password</label>
                 <input type="password" name="password" id="password" required>
             </div>
+
+            <!-- Error message positioned below input fields -->
+            <?php if (isset($_SESSION['error'])): ?>
+                <p class="error-message"><?= $_SESSION['error']; unset($_SESSION['error']); ?></p>
+            <?php endif; ?>
+
             <button type="submit" class="login-button">Login</button>
         </form>
     </div>
