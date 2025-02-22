@@ -1,19 +1,10 @@
 <?php 
+include 'config.php';
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "hospital_soap_system";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if the form has been submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
@@ -26,15 +17,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $full_name = $first_name . ' ' . $last_name;
 
-    // Check if email already exists
     $sql = "INSERT INTO patients (full_name, sex, dob, age, contact) VALUES (?, ?, ?, ?, ?)";
-
-    // Prepare and execute the SQL statement to insert patient data, then redirect on success or display an error on failure
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssds", $full_name, $sex, $dob, $age, $contact);
+    $stmt->bind_param("sssis", $full_name, $sex, $dob, $age, $contact);
 
     if ($stmt->execute()) {
         header("Location: addpatient.php?success=1");
+        exit();
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
@@ -48,9 +37,7 @@ $conn->close();
 <?php
 $profileImage = "img/hehe.jpg"; 
 $adminName = 'Admin01';
-?>
 
-<?php 
 if (isset($_GET['success']) && $_GET['success'] == 1) {
     echo "<script>alert('Patient added successfully!');</script>";
 }
@@ -61,18 +48,18 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
     <title>Add Patient</title>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
         * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: "Lexend", serif;
-        }
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Lexend", serif;
+    }
 
         html, body {
             height: 100%;
@@ -82,7 +69,7 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
             display: flex;
         }
 
-        .sidebar {
+          .sidebar {
             width: 320px;
             background-color: #176B87;
             color: white;
@@ -92,6 +79,7 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
             text-wrap: nowrap;
             display: flex;
             flex-direction: column; 
+            box-shadow: 3px 3px 10px gray;        
         }
 
         .profile {
@@ -107,7 +95,6 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
             height: 100px;
             background-color: white;
             border-radius: 50%;
-            margin-right: 10px;
         }
 
         .profile-name {
@@ -163,7 +150,7 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
             background-color: #176B87;
             padding: 20px;
             color: white;
-            border-radius: 20px;
+            border-radius: 15px;
         }
 
         header h1 {
@@ -225,6 +212,13 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
             width: 100%;
         }
 
+        .buttons {
+            display: flex;
+            justify-content: flex-end; 
+            gap: 20px; 
+        }
+
+
         .buttons button{
             margin-top: 20px;
             padding: 10px;
@@ -237,6 +231,7 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
         .buttons #cancel{
             background-color: #C90F12;
             color: white;
+
         }
 
         .buttons #save{
@@ -248,8 +243,8 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
         .buttons #save:hover{
             background-color: #046E16FF;
         }
-
-    </style>
+        
+</style>
 </head>
 <body>
     <div class="sidebar">
@@ -259,16 +254,17 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
             </div>
             <div class="profile-name"><?php echo $adminName; ?></div>
         </div>
+
         <aside>
             <ul>
-                <li><i class="fa-solid fa-house"></i></i>
+                <li><i class="fa-solid fa-house"></i>
                 <a href="dashboard.php">Dashboard</a></li>
                 <li><i class="fa-solid fa-hospital-user" style="color: #ffffff;"></i>
                 <a href="patients.php">Patient Management</a></li>
                 <li><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i>
                 <a href="appointment.php">Appointments</a></li>
                 <li><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i>
-                <a href="Subjective.php">SOAP Notes</a></li>
+                <a href="SOAP.php">SOAP Notes</a></li>
                 <li><i class="fa-solid fa-laptop-medical"></i>
                 <a href="records.php">Records</a></li>
                 <li><i class="fa-solid fa-gear" style="color: #ffffff;"></i>
@@ -278,6 +274,7 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
             </ul>
         </aside>
     </div>
+
     <div class="main-content">
         <header>
             <h1>Add Patient</h1>
@@ -286,7 +283,7 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
         <section>
             <div class="main">
                 <div class="container">
-                    <form action="addpatient.php" method="POST" class="forms" onsubmit="return validateForm()">
+                    <form action="addpatient.php" method="POST" class="forms">
                         <label for="first_name">First Name:</label>
                         <input type="text" id="first_name" name="first_name" required>
 
