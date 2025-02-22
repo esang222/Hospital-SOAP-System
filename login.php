@@ -4,6 +4,7 @@ include "config.php";
 
 // Handle Login
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve and trim input values
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
 
@@ -11,24 +12,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($username) || empty($password)) {
         $_SESSION['error'] = "Username and Password are required!";
         header("Location: login.php");
-        exit();
+        exit;
     }
 
-    // Prepare and execute query
-    $stmt = $conn->prepare("SELECT id, username, password, role FROM users WHERE username = ?");
+    $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
 
+    // Check if the user exists
     if ($row = $result->fetch_assoc()) {
-        if (password_verify($password, $row['password'])) {
+        // Compare passwords directly since we are not using hash
+        if ($password === $row['password']) {
             $_SESSION['user_id'] = $row['id'];
             $_SESSION['username'] = $row['username'];
-            $_SESSION['role'] = $row['role'];
 
             // Redirect to dashboard
             header("Location: dashboard.php");
-            exit();
+            exit;
         } else {
             $_SESSION['error'] = "Invalid password! Please try again.";
         }
@@ -38,11 +39,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Redirect back with an error message
     header("Location: login.php");
-    exit();
+    exit;
 }
-
-$conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -171,7 +171,6 @@ $conn->close();
                 <input type="password" name="password" id="password" required>
             </div>
 
-            <!-- Error message positioned below input fields -->
             <?php if (isset($_SESSION['error'])): ?>
                 <p class="error-message"><?= $_SESSION['error']; unset($_SESSION['error']); ?></p>
             <?php endif; ?>
