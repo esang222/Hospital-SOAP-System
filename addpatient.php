@@ -1,4 +1,5 @@
 <?php 
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -12,6 +13,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Check if the form has been submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
@@ -24,8 +26,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $full_name = $first_name . ' ' . $last_name;
 
+    // Check if email already exists
     $sql = "INSERT INTO patients (full_name, sex, dob, age, contact) VALUES (?, ?, ?, ?, ?)";
 
+    // Prepare and execute the SQL statement to insert patient data, then redirect on success or display an error on failure
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("sssds", $full_name, $sex, $dob, $age, $contact);
 
