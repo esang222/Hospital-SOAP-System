@@ -1,37 +1,38 @@
 <?php
-// Include the configuration file for database connection
-include 'config.php'; // Ensure this file properly initializes $conn
+include 'config.php';  // Ensure this file contains the database connection
 
-// Default profile image and admin name
-$profileImage = 'img/hehe.jpg';
-$adminName = 'Admin01';
+// Check if 'patient_id' is set in the URL query string
+if (isset($_GET['patient_id'])) {
+    $patient_id = $_GET['patient_id'];
 
-// // Ensure database connection is established
-// if (!isset($conn)) {
-//     die("Database connection is not initialized.");
-// }
+    // Fetch the latest SOAP note data for the given patient
+    $query = "SELECT sn.*, p.full_name FROM soap_notes sn 
+              JOIN patients p ON sn.patient_id = p.id 
+              WHERE sn.patient_id = ? 
+              ORDER BY sn.created_at DESC LIMIT 1";  // Limit to the latest note
 
-// // Fetch SOAP notes with all relevant fields
-// $sql = "SELECT 
-//             s.id, 
-//             p.full_name AS patient_name, 
-//             s.subjective, 
-//             s.objective, 
-//             s.assessment, 
-//             s.plan, 
-//             s.created_at, 
-//             s.updated_at 
-//         FROM soap_notes s
-//         INNER JOIN patients p ON s.patient_id = p.id 
-//         ORDER BY s.created_at DESC"; // Sort by most recent notes
+    // Prepare the statement
+    $stmt = $conn->prepare($query);
+    
+    if ($stmt === false) {
+        // Query preparation failed
+        echo "Error: " . $conn->error;
+        exit;
+    }
 
-// // Execute the query
-// $result = $conn->query($sql);
+    $stmt->bind_param('i', $patient_id);  // Bind the patient_id as an integer
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-// // Check for query errors
-// if (!$result) {
-//     die("Error fetching SOAP notes: " . $conn->error);
-// }
+    // Check if data is retrieved
+    if ($result->num_rows == 0) {
+        echo "No records found for patient ID: " . htmlspecialchars($patient_id);
+        exit;
+    }
+} else {
+    echo "No patient ID provided.";
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -64,7 +65,6 @@ $adminName = 'Admin01';
             padding: 15px;
             height: 100%;
             box-sizing: border-box;
-            text-wrap: nowrap;
             display: flex;
             flex-direction: column; 
         }
@@ -182,9 +182,9 @@ $adminName = 'Admin01';
 <div class="sidebar">
     <div class="profile">
         <div class="profile-icon">
-            <img src="<?php echo htmlspecialchars($profileImage); ?>" alt="Profile Image">
+            <img src="img/hehe.jpg" alt="Profile Image">
         </div>
-        <div class="profile-name"><?php echo htmlspecialchars($adminName); ?></div>
+        <div class="profile-name">Admin01</div>
     </div>
     <aside>
         <ul>
@@ -221,18 +221,17 @@ $adminName = 'Admin01';
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row["patient_name"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["date"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["subjective"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["objective"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["assessment"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["plan"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['full_name']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['subjective']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['objective']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['assessment']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['plan']) . "</td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='7'>No SOAP notes found.</td></tr>";
+                    echo "<tr><td colspan='6'>No records found</td></tr>";
                 }
-                
                 ?>
             </tbody>
         </table>
@@ -241,8 +240,3 @@ $adminName = 'Admin01';
 
 </body>
 </html>
-
-<?php
-// Close the database connection
-$conn->close();
-?>

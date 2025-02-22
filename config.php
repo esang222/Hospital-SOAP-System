@@ -1,10 +1,10 @@
 <?php
 
-$servername = "127.0.0.1";
+$servername = "localhost";
 $username = "root";
 $password = "";
 $database = "hospital_soap_system";
-$port = 3307;//baguhin na lng tong port sa 3306
+
 
 // increase memory limit
 ini_set('memory_limit', '1024M');//nag error kulang memory for php script
