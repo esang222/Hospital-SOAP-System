@@ -1,32 +1,27 @@
 <?php
-$profileImage = "img/hehe.jpg"; 
-$adminName = 'Admin01';
+include 'config.php';
 
-// Database connection
-$servername = "127.0.0.1";
-$username = "root";
-$password = "";
-$database = "hospital_soap_system";
-$port = 3306; // Ensure the port is set correctly
-
-$conn = new mysqli($servername, $username, $password, $database, $port);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Retrieve registered patients before processing any form submission
+$sqlPatients = "SELECT id, full_name FROM patients";
+$resultPatients = $conn->query($sqlPatients);
+if (!$resultPatients) {
+    die("Error retrieving patients: " . $conn->error);
 }
 
+// Process form submission if it occurs
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $patientId = $_POST['patient_id'];
-    $doctorName = $_POST['doctor_name'];
+    $doctorName = $_POST['doctor']; // Get the selected doctor name
     $appointmentDate = $_POST['appointment_date'];
+    $reason = $_POST['reason']; // Capture the reason for the appointment
     $status = 'Scheduled';
-    $reason = $_POST['reason'];
 
-    $stmt = $conn->prepare("INSERT INTO appointments (patient_id, doctor_name, appointment_date, status, reason) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("issss", $patientId, $doctorName, $appointmentDate, $status, $reason);
+    $stmt = $conn->prepare("INSERT INTO appointments (patient_id, doctor_name, appointment_date, reason, status) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("issss", $patientId, $doctorName, $appointmentDate, $reason, $status);
 
     if ($stmt->execute()) {
-        echo "New appointment created successfully";
+        header("Location: addAppointment.php?success=1");
+        exit();
     } else {
         echo "Error: " . $stmt->error;
     }
@@ -34,8 +29,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
 }
 
-$conn->close();
-
+if (isset($_GET['success']) && $_GET['success'] == 1) {
+    echo "<script>alert('Appointment added successfully!');</script>";
+}
 ?>
 
 <!DOCTYPE html>
@@ -43,28 +39,26 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
     <title>Add Appointment</title>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: "Lexend", serif;
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: "Lexend", serif; 
+        }
+        html, body { 
+            height: 100%; 
+        }
+        body { 
+            display: flex; 
         }
 
-        html, body {
-            height: 100%;
-        }
-
-        body {
-            display: flex;
-        }
-
-        .sidebar {
+          .sidebar {
             width: 320px;
             background-color: #176B87;
             color: white;
@@ -72,12 +66,15 @@ $conn->close();
             height: 100%;
             box-sizing: border-box;
             text-wrap: nowrap;
+            display: flex;
+            flex-direction: column; 
+            box-shadow: 3px 3px 10px gray;        
         }
 
         .profile {
             display: flex;
-            margin-bottom: 20px;
             align-items: center;
+            margin-bottom: 20px;
             justify-content: center;
             flex-direction: column;
         }
@@ -87,7 +84,6 @@ $conn->close();
             height: 100px;
             background-color: white;
             border-radius: 50%;
-            margin-right: 10px;
         }
 
         .profile-name {
@@ -98,6 +94,7 @@ $conn->close();
         aside ul {
             list-style: none;
             padding: 0;
+            flex-grow: 1; 
         }
 
         aside ul li:hover {
@@ -105,7 +102,6 @@ $conn->close();
             border-radius: 10px;
             background-color: #668C9CFF;
         }
-
 
         aside ul li {
             padding: 25px 10px;
@@ -128,14 +124,6 @@ $conn->close();
             box-sizing: border-box;
             overflow-y: auto;
         }
-        
-        .title h1{
-            margin-top: 30px;
-            font-size: 35px;
-            font-weight: 600;
-            margin-left: 30px;
-            color: #176B87;
-        }
 
         header {
             display: flex;
@@ -144,7 +132,7 @@ $conn->close();
             background-color: #176B87;
             padding: 20px;
             color: white;
-            border-radius: 20px;
+            border-radius: 15px;
         }
 
         header h1 {
@@ -165,7 +153,7 @@ $conn->close();
             margin-top: 30px;
         }
 
-        .main{
+        .main {
             background-color: #C0D7E2FF;
             width: 100%;
             display: flex;
@@ -206,7 +194,13 @@ $conn->close();
             width: 100%;
         }
 
-        .buttons button{
+        .buttons {
+            display: flex;
+            justify-content: flex-end; 
+            gap: 20px; 
+        }
+
+        .buttons button {
             margin-top: 20px;
             padding: 10px;
             font-size: 16px;
@@ -215,25 +209,23 @@ $conn->close();
             box-shadow: 3px 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        .buttons #cancel{
+        .buttons #cancel {
             background-color: #C90F12;
             color: white;
         }
 
-        .buttons #save{
+        .buttons #save {
             background-color: #0B9C2AFF;
             color: white;
-            padding: 10px 20px;
         }
 
-        .buttons #save:hover{
+        .buttons #save:hover {
             background-color: #046E16FF;
         }
-
     </style>
 </head>
 <body>
-<div class="sidebar">
+    <div class="sidebar">
         <div class="profile">
             <div class="profile-icon">
                 <img src="<?php echo htmlspecialchars($profileImage); ?>" alt="Profile Image">
@@ -242,20 +234,13 @@ $conn->close();
         </div>
         <aside>
             <ul>
-                <li><i class="fa-solid fa-house"></i></i>
-                <a href="dashboard.php">Dashboard</a></li>
-                <li><i class="fa-solid fa-hospital-user" style="color: #ffffff;"></i>
-                <a href="patients.php">Patient Management</a></li>
-                <li><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i>
-                <a href="appointment.php">Appointments</a></li>
-                <li><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i>
-                <a href="Subjective.php">SOAP Notes</a></li>
-                <li><i class="fa-solid fa-laptop-medical"></i>
-                <a href="records.php">Records</a></li>
-                <li><i class="fa-solid fa-gear" style="color: #ffffff;"></i>
-                <a href="#">Settings</a></li>
-                <li><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
-                <a href="login.php">Logout</a></li>
+                <li><i class="fa-solid fa-house"></i><a href="dashboard.php">Dashboard</a></li>
+                <li><i class="fa-solid fa-hospital-user" style="color: #ffffff;"></i><a href="patients.php">Patient Management</a></li>
+                <li><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i><a href="appointment.php">Appointments</a></li>
+                <li><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i><a href="SOAP.php">SOAP Notes</a></li>
+                <li><i class="fa-solid fa-laptop-medical"></i><a href="records.php">Records</a></li>
+                <li><i class="fa-solid fa-gear" style="color: #ffffff;"></i><a href="#">Settings</a></li>
+                <li><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i><a href="login.php">Logout</a></li>
             </ul>
         </aside>
     </div>
@@ -263,33 +248,46 @@ $conn->close();
         <header>
             <h1>Add Appointment</h1>
         </header>
-        
         <section>
-            <div class="main">
-                <div class="container">
-                    <form method="POST" action="addAppointment.php" class="forms">
-                        <label for="patient_id">Patient ID:</label>
-                        <input type="text" id="patient_id" name="patient_id">
+    <div class="main">
+        <div class="container">
+            <form method="POST" action="addAppointment.php" class="forms">
+                <label for="patient_id">Patient ID:</label>
+                <select id="patient_id" name="patient_id" required>
+                    <option value="" selected disabled>Select a Patient</option>
+                    <?php while ($patient = $resultPatients->fetch_assoc()): ?>
+                        <option value="<?php echo $patient['id']; ?>">
+                            <?php echo $patient['id'] . " - " . htmlspecialchars($patient['full_name']); ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
 
-                        <label for="doctor_name">Doctor Name:</label>
-                        <input type="text" id="doctor_name" name="doctor_name">
+                <label for="doctor">Doctor:</label>
+                <select id="doctor" name="doctor" required>
+                    <option value="" selected disabled>Select a Doctor</option>
+                    <option value="Dr. John Smith">Dr. John Smith</option>
+                    <option value="Dr. Alice Lee">Dr. Alice Lee</option>
+                    <option value="Dr. Raj Patel">Dr. Raj Patel</option>
+                    <option value="Dr. Michael Kim">Dr. Michael Kim</option>
+                    <option value="Dr. Maria Garcia">Dr. Maria Garcia</option>
+                    <option value="Dr. James Brown">Dr. James Brown</option>
+                </select>
 
-                        <label for="appointment_date">Date of Appointment:</label>
-                        <input type="datetime-local" id="appointment_date" name="appointment_date">
+                <label for="appointment_date">Date of Appointment:</label>
+                <input type="datetime-local" id="appointment_date" name="appointment_date" required>
 
-                        <label for="reason">Reason:</label>
-                        <input type="text" id="reason" name="reason">
+                <label for="reason">Reason of Appointment:</label>
+                <input type="text" id="reason" name="reason" required>
 
-                        <!-- Add other necessary fields as needed -->
-                        
-                        <div class="buttons">
-                            <a href="appointment.php"><button type="button" id="cancel">Cancel</button></a>
-                            <button type="submit" id="save">Save</button>
-                        </div>
-                    </form>
+                <div class="buttons">
+                    <a href="appointment.php"><button id="cancel" type="button">Cancel</button></a>
+                    <button id="save" type="submit">Save</button>
                 </div>
-            </div>
-        </section>
+            </form>
+        </div>
+    </div>
+</section>
+
     </div>
 </body>
 </html>
