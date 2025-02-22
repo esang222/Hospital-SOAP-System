@@ -1,26 +1,35 @@
 <?php
-include 'config.php';  
-$patientsResult = $conn->query("SELECT id, full_name FROM patients");
+include 'config.php'; 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save'])) {
-    
-    $patient_id = $_POST['patient_id'];
-    $subjective = $_POST['chief_complaint'];  
-    $objective = $_POST['vital_signs'];  
-    $assessment = $_POST['diagnosis'];  
-    $plan = $_POST['treatment_plan'];  
+// Retrieve patients for the dropdown from the 'patients' table
+$patientsResult = $conn->query("SELECT id, full_name FROM patients ORDER BY full_name ASC");
 
-    $sql = "INSERT INTO soap_notes (patient_id, subjective, objective, assessment, plan, created_at) 
-            VALUES ('$patient_id', '$subjective', '$objective', '$assessment', '$plan', NOW())";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $patientId       = $_POST['patient_id'];
+    $chiefComplaint  = $_POST['chief_complaint'];
+    $vitalSigns      = $_POST['vital_signs'];
+    $diagnosis       = $_POST['diagnosis'];
+    $treatmentPlan   = $_POST['treatment_plan'];
 
-    if ($conn->query($sql) === TRUE) {
-        echo "<script>alert('SOAP Note saved successfully!'); window.location.href='records.php?patient_id=" . $patient_id . "';</script>";
-        exit();
+    // Combine inputs for objective
+    $objective = "Vital Signs: " . $vitalSigns;
+
+    // Insert into the soap_notes table using your correct schema
+    $sql = "INSERT INTO soap_notes (patient_id, subjective, objective, assessment, plan) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("issss", $patientId, $chiefComplaint, $objective, $diagnosis, $treatmentPlan);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('SOAP Note saved successfully!'); window.location.href='records.php';</script>";
     } else {
-        echo "Error: " . $conn->error;
+        echo "<script>alert('Error saving SOAP Note');</script>";
     }
+
+    $stmt->close();
+    $conn->close();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -241,19 +250,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save'])) {
 <div class="sidebar">
     <div class="profile">
         <div class="profile-icon">
-            <img src="img/profile.jpg" alt="Profile Image">
+            <img src="<?php echo $profileImage; ?>" alt="Profile Image">
         </div>
-        <div class="profile-name">Admin01</div>
+        <div class="profile-name"><?php echo $adminName; ?></div>
     </div>
     <aside>
         <ul>
             <li><i class="fa-solid fa-house"></i><a href="dashboard.php">Dashboard</a></li>
-            <li><i class="fa-solid fa-hospital-user"></i><a href="patients.php">Patient Management</a></li>
-            <li><i class="fa-solid fa-calendar-check"></i><a href="appointment.php">Appointments</a></li>
-            <li><i class="fa-solid fa-notes-medical"></i><a href="SOAP.php">SOAP Notes</a></li>
+            <li><i class="fa-solid fa-hospital-user" style="color: #ffffff;"></i><a href="patients.php">Patient Management</a></li>
+            <li><i class="fa-solid fa-calendar-check" style="color: #ffffff;"></i><a href="appointment.php">Appointments</a></li>
+            <li><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i><a href="SOAP.php">SOAP Notes</a></li>
             <li><i class="fa-solid fa-laptop-medical"></i><a href="records.php">Records</a></li>
-            <li><i class="fa-solid fa-gear"></i><a href="#">Settings</a></li>
-            <li><i class="fa-solid fa-right-from-bracket"></i><a href="login.php">Logout</a></li>
+            <li><i class="fa-solid fa-gear" style="color: #ffffff;"></i><a href="#">Settings</a></li>
+            <li><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i><a href="login.php">Logout</a></li>
         </ul>
     </aside>
 </div>
@@ -263,8 +272,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save'])) {
     </header>
 
     <div class="top">
-        <form method="POST" action="">
+    <form method="POST" action="">
+            <!-- Patient Selection -->
             <div class="patients">
+                <!-- <label for="patient_id">Select Patient: </label> -->
                 <select name="patient_id" id="patient_id" required>
                     <option value="" selected disabled>Select a patient</option>
                     <?php
@@ -276,16 +287,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save'])) {
                     ?>
                 </select>
             </div>
+    </div>
 
-            <section class="content-wrapper">
+    <section>
+        <div class="main">
+            <div class="content-wrapper">
                 <div class="container">
                     <h2>Subjective</h2>
                     <div class="forms">
                         <label for="chief_complaint">Chief Complaint:</label>
-                        <input type="text" id="chief_complaint" name="chief_complaint" placeholder="e.g., Headache" required>
-                        
-                        <label for="hpi">History of Present Illness:</label>
-                        <input type="text" id="hpi" name="hpi" placeholder="e.g., Started 3 days ago" required>
+                        <input type="text" id="chief_complaint" name="chief_complaint" placeholder="e.g., Headache">
+                        <label for="hpi">Allergies:</label>
+                        <input type="text" id="hpi" name="hpi" placeholder="e.g., Penicillin">
                     </div>
                 </div>
 
@@ -293,10 +306,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save'])) {
                     <h2>Objective</h2>
                     <div class="forms">
                         <label for="vital_signs">Vital Signs:</label>
-                        <input type="text" id="vital_signs" name="vital_signs" placeholder="e.g., BP: 120/80" required>
-                        
+                        <input type="text" id="vital_signs" name="vital_signs" placeholder="e.g., BP: 120/80">
                         <label for="physical_exam">Physical Examination:</label>
-                        <input type="text" id="physical_exam" name="physical_exam" placeholder="e.g., Normal heart sounds" required>
+                        <input type="text" id="physical_exam" name="physical_exam" placeholder="e.g., Normal heart sounds">
                     </div>
                 </div>
 
@@ -304,7 +316,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save'])) {
                     <h2>Assessment</h2>
                     <div class="forms">
                         <label for="diagnosis">Diagnosis:</label>
-                        <input type="text" id="diagnosis" name="diagnosis" placeholder="e.g., Hypertension" required>
+                        <input type="text" id="diagnosis" name="diagnosis" placeholder="e.g., Hypertension">
                     </div>
                 </div>
 
@@ -312,16 +324,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save'])) {
                     <h2>Plan</h2>
                     <div class="forms">
                         <label for="treatment_plan">Treatment Plan:</label>
-                        <input type="text" id="treatment_plan" name="treatment_plan" placeholder="e.g., Prescribe medication" required>
+                        <input type="text" id="treatment_plan" name="treatment_plan" placeholder="e.g., Prescribe medication">
                     </div>
                 </div>
 
                 <div class="buttons">
-                    <button type="submit" name="save" id="save">Save</button>
+                    <button id="save">Save</button>
                 </div>
-            </section>
-        </form>
-    </div>
+            </div>
+            
+        </div>
+    </section>
 </div>
 </body>
 </html>
