@@ -261,8 +261,11 @@ $conn->close();
                 <a href="records.php">Records</a></li>
                 <li><i class="fa-solid fa-gear" style="color: #ffffff;"></i>
                 <a href="#">Settings</a></li>
-                <li><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
-                <a href="login.php">Logout</a></li>
+                <li>
+                    <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
+                    <a href="login.php?action=logout" onclick="return confirm('Are you sure you want to logout?');">Logout</a>
+                </li>
+
             </ul>
         </aside>
     </div>
@@ -307,8 +310,9 @@ $conn->close();
 
                         <div class="buttons">
                             <a href="patients.php"><button type="button" id="cancel">Cancel</button></a>
-                            <button type="submit" id="save">Save</button>
+                            <button type="submit" id="save" onclick="alert('Patient has been successfully added!');">Save</button>
                         </div>
+
                     </form>
                 </div>
             </div>

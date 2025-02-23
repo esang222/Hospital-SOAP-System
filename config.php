@@ -5,10 +5,10 @@ $servername = "127.0.0.1";
 $username = "root";
 $password = "";
 $database = "hospital_soap_system";
-$port = 3307;//baguhin na lng tong port sa 3306
+$port = 3307;
 
 // increase memory limit
-ini_set('memory_limit', '1024M');//nag error kulang memory for php script
+ini_set('memory_limit', '1024M');
 
 // enable MySQLi error reporting
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);

@@ -240,7 +240,10 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
                 <li><i class="fa-solid fa-notes-medical" style="color: #ffffff;"></i><a href="SOAP.php">SOAP Notes</a></li>
                 <li><i class="fa-solid fa-laptop-medical"></i><a href="records.php">Records</a></li>
                 <li><i class="fa-solid fa-gear" style="color: #ffffff;"></i><a href="#">Settings</a></li>
-                <li><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i><a href="login.php">Logout</a></li>
+                <li>
+                    <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
+                    <a href="login.php?action=logout" onclick="return confirm('Are you sure you want to logout?');">Logout</a>
+                </li>
             </ul>
         </aside>
     </div>
